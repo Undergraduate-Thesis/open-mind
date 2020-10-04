@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="mx-auto px-4 py-8 max-w-xl my-20">
+    <!-- <div class="px-4 py-8 max-w-xl">
       <div class="bg-white shadow-2xl rounded-lg mb-6 tracking-wide">
         <div class="md:flex-shrink-0">
           <img
@@ -31,9 +31,49 @@
           </div>
         </div>
       </div>
+    </div> -->
+    <div
+      class="my-3 lg:flex lg:justify-center bg-white cursor-pointer"
+      @click="openArticle()"
+    >
+      <div class="lg:w-2/5">
+        <div
+          class="h-64 bg-cover lg:rounded-lg lg:h-full"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1497493292307-31c376b6e479?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80');
+          "
+        ></div>
+      </div>
+      <div class="py-12 px-6 max-w-xl lg:max-w-5xl lg:w-3/5">
+        <h2 class="text-3xl text-gray-800 font-bold">
+          {{ article.title }}
+        </h2>
+        <p class="mt-4 text-gray-600 spoiler--3line">
+          {{ article.content }}
+        </p>
+        <div class="mt-8">
+          <!-- @click.native bertujuan untuk mematikan action @click pada div card diatas. @click.nativesama seperti onclick; event.stopPropagation di javascript -->
+          <nuxt-link
+            @click.native="$event.stopImmediatePropagation()"
+            to="/404"
+            class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
+          >
+            save
+          </nuxt-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+<style scoped>
+.spoiler--3line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+</style>
 <script lang="ts">
 import Vue from "vue";
 const axios = require("@nuxtjs/axios");
@@ -42,8 +82,28 @@ export default Vue.extend({
   props: {
     article: {},
   },
+  data() {
+    return {
+      spoiler: "",
+    };
+  },
   async mounted() {
-    console.log(this.article);
+    const sentences = (this.article as any).content.match(/[^\.!\?]+[\.!\?]+/g);
+    sentences.forEach((element: String) => {
+      this.spoiler += element;
+    });
+  },
+  methods: {
+    openArticle() {
+      alert("haha");
+    },
+    tes() {
+      alert("huehehe");
+    },
+    stopPropagation(e: Event, path: string) {
+      e.stopPropagation();
+      this.$router.push({ path: path });
+    },
   },
 });
 </script>
