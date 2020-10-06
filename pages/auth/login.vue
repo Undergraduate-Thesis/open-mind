@@ -9,21 +9,38 @@
     >
       <div class="max-w-md w-full">
         <div>
-          <img
-            class="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-on-white.svg"
-            alt="Workflow"
-          />
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            class="mx-auto h-12 w-auto text-blue-600"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
+          </svg>
           <h2
             class="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900"
           >
             Sign in to your account
           </h2>
         </div>
-        <form class="mt-8" action="#" method="POST">
+        <form
+          class="w-full max-w-xl mt-8 bg-white rounded-lg shadow-md p-6"
+          action="#"
+          method="POST"
+        >
           <input type="hidden" name="remember" value="true" />
           <div class="rounded-md shadow-sm">
-            <div>
+            <div class="mb-6">
+              <label
+                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                for="email"
+                >Email Address</label
+              >
               <input
                 aria-label="Email address"
                 aria-required="true"
@@ -36,7 +53,12 @@
                 v-model="email"
               />
             </div>
-            <div class="-mt-px">
+            <div class="mb-2">
+              <label
+                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                for="password"
+                >Password</label
+              >
               <input
                 name="password"
                 type="password"
