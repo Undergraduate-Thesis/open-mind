@@ -95,10 +95,7 @@ export default Vue.extend({
   },
   methods: {
     openArticle() {
-      alert("haha");
-    },
-    tes() {
-      alert("huehehe");
+      this.$router.push({ path: "/404" });
     },
     stopPropagation(e: Event, path: string) {
       e.stopPropagation();
