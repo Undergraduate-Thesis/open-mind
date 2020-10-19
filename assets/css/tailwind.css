@@ -1,3 +1,50 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+/*  ini custom css untuk ubah default tailwindcss (menyesuaikan desain markdown), info lengkap cek https://tailwindcss.com/docs/preflight#app */
+h1 {
+  @apply text-2xl;
+  @apply font-bold;
+}
+h2 {
+  @apply text-xl;
+  @apply font-bold;
+}
+h3 {
+  @apply text-lg;
+  @apply font-bold;
+}
+h4 {
+  @apply text-base;
+  @apply font-bold;
+}
+h5 {
+  @apply text-sm;
+  @apply font-bold;
+}
+h6 {
+  @apply text-xs;
+  @apply font-bold;
+}
+blockquote {
+  @apply p-2;
+  @apply mx-6;
+  @apply bg-gray-100;
+  @apply mb-4;
+  @apply border-l-4;
+  @apply border-gray-400;
+  @apply italic;
+}
+ul,
+ol {
+  @apply mb-4;
+  @apply ml-8;
+  @apply mb-0;
+}
+ul {
+  @apply list-disc;
+}
+ol {
+  @apply list-decimal;
+}
