@@ -10,6 +10,7 @@
     "strict": true,
     "noEmit": true,
     "experimentalDecorators": true,
+    // "noImplicitAny": false, // handle error module javascript yang gk kebaca di typescript -> Could not find a declaration file for module 'natural' Try `npm install @types/natural` if it exists or add a new declaration (.d.ts)
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"],
