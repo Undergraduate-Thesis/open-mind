@@ -3,7 +3,7 @@ export default {
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
    */
-  mode: "universal",
+  mode: "spa", //spa mode memungkinkan middleware berjalan di client side, sedangkan universal middleware berjalan di server side
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
@@ -34,7 +34,7 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: ["~/plugins/textPreprocessing.ts"],
+  plugins: ["~/plugins/textPreprocessing", "~/plugins/axios"],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -61,15 +61,28 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    // baseURL: process.env.BASE_URL || "http://localhost:3000/api/v1"
+    baseURL: process.env.BASE_URL || "http://api-openmind.victorycq.site/api/v1"
   },
   /*
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
    */
-  build: {},
+  build: {
+    //ini untuk handle error depndency was not found "* fs in ./node_modules/natural/lib/natural/classifiers/classifier.js," (handle error library natural)
+    extend(config, { isDev, isClient }) {
+      config.node = {
+        fs: "empty"
+      };
+    }
+  },
   server: {
     port: 8000, // default: 3000
     host: "0.0.0.0" // default: localhost
+  },
+  publicRuntimeConfig: {
+    baseURL: process.env.BASE_URL
+  },
+  privateRuntimeConfig: {
+    apiSecret: process.env.API_SECRET
   }
 };
