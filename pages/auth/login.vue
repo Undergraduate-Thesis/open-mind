@@ -106,28 +106,33 @@
 <script>
 import Vue from "vue";
 export default Vue.extend({
+  middleware: "guest",
   data() {
     return {
       email: "",
       password: "",
-      errorMessage: "",
+      errorMessage: ""
     };
   },
   methods: {
     Sigin(email, password) {
       this.errorMessage = "";
       this.$axios
-        .post("http://localhost:3000/api/v1/auth/login", {
+        .post("/auth/login", {
           email: this.email,
-          password: this.password,
+          password: this.password
         })
-        .then((res) => {
+        .then(res => {
+          if (process.browser) {
+            localStorage.setItem("access_token", res.data.token);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+          }
           this.$router.push({ path: "/" });
         })
-        .catch((err) => {
+        .catch(err => {
           this.errorMessage = err.response.data;
         });
-    },
-  },
+    }
+  }
 });
 </script>
