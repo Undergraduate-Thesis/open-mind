@@ -1,44 +1,10 @@
 <template>
-  <div>
-    <nav class="bg-gray-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center">
-            <div class="flex-shrink-0">
-              <img
-                class="h-8 w-8"
-                src="https://tailwindui.com/img/logos/workflow-mark-on-dark.svg"
-                alt="Workflow logo"
-              />
-            </div>
-          </div>
-          <div class="hidden md:block">
-            <div class="ml-4 flex items-center md:ml-6">
-              <nuxt-link
-                to="/auth/login"
-                tag="button"
-                class="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
-              >
-                Log in
-              </nuxt-link>
-              <nuxt-link
-                to="/auth/register"
-                tag="button"
-                class="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-              >
-                Create account
-              </nuxt-link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <header class="bg-white shadow">
-      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+  <div class="homepage">
+    <div class="bg-white shadow">
+      <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between">
-          <h1 class="text-3xl font-bold leading-tight text-gray-900">
-            Good Morning
+          <h1 class="leading-tight text-gray-900">
+            {{ currentTime }}, {{ user != null ? user.name : "" }}
           </h1>
           <!-- component -->
           <!-- This is an example component -->
@@ -72,26 +38,38 @@
           </div>
         </div>
       </div>
-    </header>
+    </div>
 
-    <main>
+    <div>
       <div class="max-w-7xl">
         <!-- Replace with your content -->
-        <div class="lg:pl-20 pr-8 py-4 bg-gray-200 h-screen w-screen">
+        <div class="lg:pl-20 pr-8 py-4 bg-gray-200 h-full w-full">
           <div class="flex flex-wrap">
             <!-- Content -->
             <div class="w-4/6 mx-6 text-gray-700">
-              <cardArticle
-                v-for="article in articles"
-                :key="article._id"
-                :article="article"
-              />
+              <div v-if="articles.length == 0">
+                <skeletonArticle v-for="index in 5" :key="index" />
+              </div>
+              <div v-else>
+                <singleArticle
+                  v-for="article in articles"
+                  :key="article._id"
+                  :article="article"
+                />
+              </div>
             </div>
-            <div class="w-1/6 my-3 p-4 bg-white hidden lg:block">
-              <h1 class="text-2xl text-gray-600 font-bold mb-4">Tag Populer</h1>
-              <div class="flex flex-wrap hover:bg-gray-200 hover-trigger">
-                <nuxt-link to="/404" class="w-4/6 break-words mb-2">
-                  #webdev
+            <div class="w-1/6 my-3 p-4 bg-white hidden lg:block rounded-md">
+              <h1 class="text-2xl font-bold mb-4">Tag Populer</h1>
+              <div
+                v-for="tag in tags"
+                :key="tag._id"
+                class="flex flex-wrap hover:bg-gray-200 hover-trigger"
+              >
+                <nuxt-link
+                  to="/404"
+                  class="w-4/6 break-words mb-2 text-gray-600"
+                >
+                  #{{ tag.name }}
                 </nuxt-link>
                 <button
                   class="w-2/6 inline-block text-sm bg-blue-500 hover:bg-blue-700 hover-target text-white font-bold py-1 px-2 rounded"
@@ -104,9 +82,10 @@
         </div>
         <!-- /End replace -->
       </div>
-    </main>
+    </div>
   </div>
 </template>
+
 <style scoped>
 .hover-trigger .hover-target {
   display: none;
@@ -119,27 +98,71 @@
 
 <script>
 import Vue from "vue";
-import cardArticle from "@/components/Card-Article";
+import singleArticle from "@/components/Card/Single-Article";
+import skeletonArticle from "@/components/Skeleton/Single-Article";
 
 export default Vue.extend({
+  layout: "container",
   components: {
-    cardArticle,
+    singleArticle,
+    skeletonArticle
   },
   data() {
     return {
+      get token() {
+        if (process.browser == true)
+          if (localStorage.getItem("access_token") != null)
+            return localStorage.getItem("access_token") || "";
+          else return 0;
+      },
+      get user() {
+        if (process.browser == true)
+          if (localStorage.getItem("user") != null)
+            return JSON.parse(localStorage.getItem("user") || "");
+          else return 0;
+      },
+      currentTime: "",
       articles: [],
+      tags: []
     };
   },
-  mounted() {
+  async mounted() {
     // this.$myInjectedFunction("works in mounted");
-    this.$axios
-      .get("http://localhost:3000/api/v1/article")
-      .then((res) => {
-        this.articles = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.defineCurrentTime();
+    this.getArticles();
+    this.getTags();
   },
+  methods: {
+    async getTags() {
+      try {
+        this.tags = await this.$axios.$get("/tag");
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    async getArticles() {
+      try {
+        this.articles = await this.$axios.$get("/article");
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    defineCurrentTime() {
+      const today = new Date();
+      const currentHour = today.getHours();
+
+      if (currentHour < 12) {
+        this.currentTime = "Good Morning";
+      } else if (currentHour < 18) {
+        this.currentTime = "Good Afternoon";
+      } else {
+        this.currentTime = "Good Evening";
+      }
+    },
+    logout() {
+      localStorage.clear();
+      window.location.reload(true);
+    }
+  }
 });
 </script>
