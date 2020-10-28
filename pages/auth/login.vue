@@ -42,6 +42,7 @@
                 >Email Address</label
               >
               <input
+                id="email"
                 aria-label="Email address"
                 aria-required="true"
                 aria-invalid="true"
@@ -60,6 +61,7 @@
                 >Password</label
               >
               <input
+                id="password"
                 name="password"
                 type="password"
                 aria-label="Password"

@@ -12,7 +12,7 @@
             class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             >Title</label
           >
-          <input type="text" v-model="title" placeholder="Title" />
+          <input id="title" type="text" v-model="title" placeholder="Title" />
         </div>
         <div class="mb-6">
           <label
