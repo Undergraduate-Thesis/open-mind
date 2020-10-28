@@ -21,6 +21,7 @@
                 <nuxt-link
                   to="/auth/login"
                   tag="button"
+                  aria-label="Login"
                   class="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
                 >
                   Log in
@@ -28,6 +29,7 @@
                 <nuxt-link
                   to="/auth/register"
                   tag="button"
+                  aria-label="Create Account"
                   class="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
                 >
                   Create account
@@ -37,6 +39,7 @@
                 <nuxt-link
                   to="/article/create"
                   tag="button"
+                  aria-label="Write Post"
                   class="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
                 >
                   Write Post

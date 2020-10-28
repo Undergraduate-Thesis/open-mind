@@ -15,7 +15,11 @@
               name="search"
               placeholder="Search"
             />
-            <button type="submit" class="absolute right-0 top-0 mt-5 mr-4">
+            <button
+              type="submit"
+              class="absolute right-0 top-0 mt-5 mr-4"
+              aria-label="Search Icon"
+            >
               <svg
                 class="text-gray-600 h-4 w-4 fill-current"
                 xmlns="http://www.w3.org/2000/svg"
@@ -72,6 +76,7 @@
                   #{{ tag.name }}
                 </nuxt-link>
                 <button
+                  aria-label="Follow"
                   class="w-2/6 inline-block text-sm bg-blue-500 hover:bg-blue-700 hover-target text-white font-bold py-1 px-2 rounded"
                 >
                   Follow

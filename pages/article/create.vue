@@ -30,6 +30,7 @@
           ></textarea>
         </div>
         <button
+          aria-label="Post"
           class="py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700"
         >
           POST
@@ -44,7 +45,7 @@ export default Vue.extend({
   data() {
     return {
       title: "",
-      content: "",
+      content: ""
     };
   },
   mounted() {
@@ -53,7 +54,7 @@ export default Vue.extend({
   methods: {
     open() {
       alert(this.title);
-    },
-  },
+    }
+  }
 });
 </script>

@@ -41,9 +41,10 @@
               </p>
               <nuxt-link
                 to="/auth/login"
+                aria-label="Sigin"
                 class="flex-auto py-1 border border-transparent text-sm leading-5 font-medium rounded-md bg-indigo-600 hover:bg-indigo-500 text-white"
                 tag="button"
-                >Login</nuxt-link
+                >Sigin</nuxt-link
               >
             </div>
           </div>
@@ -259,6 +260,7 @@
 
             <div class="mt-6">
               <button
+                aria-label="Signup"
                 class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md"
                 :class="{
                   'bg-indigo-600 hover:bg-indigo-500 text-white':
