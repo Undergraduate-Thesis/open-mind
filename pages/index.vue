@@ -50,7 +50,7 @@
         <div class="lg:pl-20 pr-8 py-4 bg-gray-200 h-full w-full">
           <div class="flex flex-wrap">
             <!-- Content -->
-            <div class="w-4/6 mx-6 text-gray-700">
+            <div class="w-full lg:w-4/6 mx-6 text-gray-700">
               <div v-if="articles.length == 0">
                 <skeletonArticle v-for="index in 5" :key="index" />
               </div>
