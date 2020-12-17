@@ -329,7 +329,6 @@ export default Vue.extend({
         if (this.passwordMatch) {
           const register = await this.$axios.post("/auth/register", {
             name: this.name,
-            gender: this.gender,
             email: this.email,
             password: this.password
           });
