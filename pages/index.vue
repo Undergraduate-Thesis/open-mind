@@ -10,6 +10,7 @@
           <!-- This is an example component -->
           <div class="pt-2 relative text-gray-600">
             <input
+              v-model="search"
               class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
               type="search"
               name="search"
@@ -19,6 +20,7 @@
               type="submit"
               class="absolute right-0 top-0 mt-5 mr-4"
               aria-label="Search Icon"
+              @click="search"
             >
               <svg
                 class="text-gray-600 h-4 w-4 fill-current"
@@ -50,7 +52,7 @@
         <div class="lg:pl-20 pr-8 py-4 bg-gray-200 h-full w-full">
           <div class="flex flex-wrap">
             <!-- Content -->
-            <div class="w-full lg:w-4/6 mx-6 text-gray-700">
+            <div class="w-full lg:w-8/12 mx-6 text-gray-700">
               <div v-if="articles.length == 0">
                 <skeletonArticle v-for="index in 5" :key="index" />
               </div>
@@ -62,25 +64,23 @@
                 />
               </div>
             </div>
-            <div class="w-1/6 my-3 p-4 bg-white hidden lg:block rounded-md">
+            <div class="w-2/12 my-3 p-4 bg-white hidden lg:block rounded-md">
               <h1 class="text-2xl font-bold mb-4">Tag Populer</h1>
               <div
                 v-for="tag in tags"
                 :key="tag._id"
                 class="flex flex-wrap hover:bg-gray-200 hover-trigger"
               >
+                <div class="w-4/6 break-words mb-2 text-gray-600">
+                  {{ tag.name }}
+                </div>
                 <nuxt-link
-                  to="/404"
-                  class="w-4/6 break-words mb-2 text-gray-600"
-                >
-                  #{{ tag.name }}
-                </nuxt-link>
-                <button
-                  aria-label="Follow"
+                  :to="`/filterTag/${tag._id}`"
+                  aria-label="view"
                   class="w-2/6 inline-block text-sm bg-blue-500 hover:bg-blue-700 hover-target text-white font-bold py-1 px-2 rounded"
                 >
-                  Follow
-                </button>
+                  View
+                </nuxt-link>
               </div>
             </div>
           </div>
@@ -110,7 +110,7 @@ export default Vue.extend({
   layout: "container",
   components: {
     singleArticle,
-    skeletonArticle
+    skeletonArticle,
   },
   data() {
     return {
@@ -128,7 +128,8 @@ export default Vue.extend({
       },
       currentTime: "",
       articles: [],
-      tags: []
+      tags: [],
+      search: "",
     };
   },
   async mounted() {
@@ -164,10 +165,18 @@ export default Vue.extend({
         this.currentTime = "Good Evening";
       }
     },
+    search() {
+      try {
+        this.articles = this.$axios.$get("/search", { text: this.search });
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
     logout() {
       localStorage.clear();
       window.location.reload(true);
-    }
-  }
+      // this.$router.push({ path: "/404" });
+    },
+  },
 });
 </script>
