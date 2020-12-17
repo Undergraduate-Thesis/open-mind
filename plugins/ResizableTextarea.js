@@ -6,6 +6,7 @@ export default {
     }
   },
   mounted() {
+    //EDIT: decrease this.$el.scrollHeight
     this.$nextTick(() => {
       this.$el.setAttribute(
         "style",
