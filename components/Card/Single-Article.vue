@@ -4,14 +4,14 @@
       <div class="lg:w-2/5">
         <div
           class="h-64 bg-cover lg:rounded-lg lg:h-full cursor-pointer"
-          @click="openArticle()"
+          @click="openArticle(article._id)"
           style="
             background-image: url('https://images.unsplash.com/photo-1497493292307-31c376b6e479?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80');
           "
         ></div>
       </div>
       <div class="py-10 px-6 max-w-xl lg:max-w-5xl lg:w-3/5">
-        <nuxt-link to="/404"
+        <nuxt-link :to="`/article/${article._id}`"
           ><h2 class="text-3xl text-gray-800 font-bold hover:text-blue-700">
             {{ article.title }}
           </h2>
@@ -103,8 +103,9 @@ export default Vue.extend({
     }
   },
   methods: {
-    openArticle() {
+    openArticle(id: any) {
       this.$router.push({ path: "/404" });
+      this.$router.push({ path: `/article/${id}` });
     },
     stopPropagation(e: Event, path: string) {
       e.stopPropagation();
