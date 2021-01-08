@@ -71,7 +71,8 @@ export default {
     //ini untuk handle error depndency was not found "* fs in ./node_modules/natural/lib/natural/classifiers/classifier.js," (handle error library natural)
     extend(config, { isDev, isClient }) {
       config.node = {
-        fs: "empty"
+        fs: "empty",
+        child_process: "empty"
       };
     }
   },
