@@ -95,6 +95,7 @@
               <div class="article__tag relative">
                 <span
                   v-for="tag in tags"
+                  :key="tag"
                   class="absloute bottom-0 bg-indigo-600 mr-2 px-2 py-1 text-white rounded-md"
                   >{{ tag.name }}
                 </span>
@@ -172,6 +173,7 @@
   </div>
 </template>
 <script>
+import { jsPDF } from "jspdf";
 import singleComment from "@/components/Card/Single-Comment";
 export default {
   layout: "container",
@@ -233,6 +235,75 @@ export default {
           this.yourLikeId = null;
         });
       }
+    },
+    download() {
+      // Default export is a4 paper, portrait, using millimeters for units
+      const doc = new jsPDF({ orientation: "p", unit: "in", format: [8.3, 11.7] });
+      const pageWidth = 8.3;
+      const ptsPerInch = 72;
+      const margin = 0.7;
+      const maxLineWidth = pageWidth - margin * 2;
+
+      let bottomPositionText = 1.2;
+
+      //Title
+      const fontSizeTitle = 30;
+      let oneLineHeight = fontSizeTitle / ptsPerInch;
+
+      let textLines = doc
+        .setFont("helvetica")
+        .setFontSize(fontSizeTitle)
+        .splitTextToSize(this.article.title, maxLineWidth);
+
+      doc.text(textLines, margin, bottomPositionText);
+
+      bottomPositionText += textLines.length * oneLineHeight;
+
+      //Author
+      const fontSizeAuthor = 12;
+      oneLineHeight = fontSizeAuthor / ptsPerInch;
+
+      textLines = doc
+        .setFont("helvetica")
+        .setFontSize(fontSizeAuthor)
+        .splitTextToSize(
+          this.article.author + " " + this.article.created_at,
+          maxLineWidth
+        );
+
+      doc.text(textLines, margin, bottomPositionText);
+
+      // 1 is extend whitespace to make clearly distance between title and content
+      bottomPositionText += textLines.length * oneLineHeight + 0.5;
+      ``;
+
+      //Content
+      let content = this.article.content.replace(/<p[^>]*>/g, "");
+      content = content.replace(/<\/p[^>]*>/g, "\n");
+      const fontSizeContent = 12;
+      oneLineHeight = fontSizeContent / ptsPerInch;
+
+      textLines = doc
+        .setFont("helvetica")
+        .setFontSize(fontSizeContent)
+        .splitTextToSize(content, maxLineWidth);
+
+      textLines.forEach((value) => {
+        doc.text(value, margin, bottomPositionText);
+
+        //0.08 because the vertical distance is too tight.
+        bottomPositionText += oneLineHeight + 0.08;
+
+        const bottomMaxPosition = 11.7 - 1.2;
+
+        if (bottomPositionText + oneLineHeight > bottomMaxPosition) {
+          doc.addPage();
+          bottomPositionText = 1.2;
+        }
+      });
+
+      // //Download
+      doc.save("article.pdf");
     },
     addComment() {
       this.$axios
