@@ -20,7 +20,7 @@
     "markdown-it": "^12.0.0",
     "natural": "^2.1.5",
     "nuxt": "^2.14.0",
-    "remove-markdown": "^0.3.0",
+    "remove-markdown": "^0.3.0"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.6",
