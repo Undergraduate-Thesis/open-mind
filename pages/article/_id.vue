@@ -36,7 +36,7 @@
             <button
               aria-label="Save Article"
               class="relative w-32 flex justify-end py-2 px-4 mb-2 border-solid border-2 border-black text-sm leading-5 font-medium rounded-md hover:bg-gray-400"
-              @click.prevent="Save()"
+              @click.prevent="save()"
             >
               <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                 <svg
@@ -46,7 +46,13 @@
                   height="24"
                 >
                   <path fill="none" d="M0 0h24v24H0z" />
+
                   <path
+                    v-if="yourBookmarkId != null"
+                    d="M5 2h14a1 1 0 0 1 1 1v19.143a.5.5 0 0 1-.766.424L12 18.03l-7.234 4.536A.5.5 0 0 1 4 22.143V3a1 1 0 0 1 1-1z"
+                  />
+                  <path
+                    v-else
                     d="M5 2h14a1 1 0 0 1 1 1v19.143a.5.5 0 0 1-.766.424L12 18.03l-7.234 4.536A.5.5 0 0 1 4 22.143V3a1 1 0 0 1 1-1zm13 2H6v15.432l6-3.761 6 3.761V4z"
                   />
                 </svg>
@@ -84,8 +90,15 @@
         <div class="bg-white mb-6 rounded-lg">
           <div class="article__image">
             <img
+              v-if="thumbnail != ''"
               class="object-cover w-full h-64 rounded-t-lg"
-              src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+              :src="thumbnail"
+              alt="article image"
+            />
+            <img
+              v-else
+              class="object-cover w-full h-64 rounded-t-lg"
+              src="https://images.unsplash.com/photo-1587814969489-e5df12e17391?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NHx8c29jaWFsJTIwZGlzdGFuY2UlMjBhbmQlMjBzdGF5JTIwc2FmZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
               alt="article image"
             />
           </div>
@@ -94,8 +107,8 @@
             <div class="flex justify-between">
               <div class="article__tag relative">
                 <span
-                  v-for="tag in tags"
-                  :key="tag"
+                  v-for="(tag, index) in tags"
+                  :key="index"
                   class="absloute bottom-0 bg-indigo-600 mr-2 px-2 py-1 text-white rounded-md"
                   >{{ tag.name }}
                 </span>
@@ -113,7 +126,9 @@
               <h1 class="text-4xl font-bold">{{ article.title }}</h1>
             </div>
             <div class="article__author mb-6">
-              <p class="text-lg">{{ article.author }} ({{ article.created_at }})</p>
+              <p class="text-lg">
+                {{ article.author }} ({{ article.created_at }})
+              </p>
             </div>
             <div class="article__content h-full text-xl" v-show="!summary">
               <div v-html="article.content"></div>
@@ -178,34 +193,62 @@ import singleComment from "@/components/Card/Single-Comment";
 export default {
   layout: "container",
   components: {
-    singleComment,
+    singleComment
   },
   data() {
     return {
       user: JSON.parse(localStorage.getItem("user")),
+      thumbnail: "",
       article: {},
       summary: false,
       tags: [],
       likes: [],
       yourLikeId: null,
+      yourBookmarkId: null,
       comments: [],
-      comment: "",
+      comment: ""
     };
   },
   async mounted() {
     try {
       //$axios.$get() it's same as $axios.get().data
-      const article = await this.$axios.$get(`/article/${this.$route.params.id}`);
+      const article = await this.$axios.$get(
+        `/article/${this.$route.params.id}`
+      );
+      const date = new Date(article.created_at);
+      // alert(date);
+
+      // Get Thumbnail
+      let thumbnailName = article.thumbnail.fieldname;
+      const thumbnailType = article.thumbnail.mimetype.replace("image/", "");
+      const getThumbnail = await this.$axios.$get(
+        `/article/thumbnail/${thumbnailName}.${thumbnailType}`
+      );
+      const b64encoded = Buffer.from(getThumbnail.Body.data).toString("base64");
+      this.thumbnail = "data:image/jpg;base64," + b64encoded;
+
+      // Get Tags
       const tags = await this.$axios.$get(`/tag/${this.$route.params.id}`);
-      const likes = await this.$axios.$get(`/article/like/${this.$route.params.id}`);
+      const likes = await this.$axios.$get(
+        `/article/like/${this.$route.params.id}`
+      );
       const comments = await this.$axios.$get(
         `/article/comment/${this.$route.params.id}`
       );
+      if (this.user != null) {
+        const bookmark = await this.$axios.$get(
+          `/user/singleBookmark/${this.user.id}/${this.$route.params.id}`
+        );
+        if (bookmark != "") {
+          this.yourBookmarkId = bookmark;
+        }
+      }
+
       this.article = article;
       this.tags = tags;
       this.likes = likes;
       this.comments = comments;
-      this.likes.forEach((element) => {
+      this.likes.forEach(element => {
         if (element.user_id == this.user.id) {
           this.yourLikeId = element._id;
         }
@@ -217,28 +260,13 @@ export default {
     }
   },
   methods: {
-    like() {
-      if (this.yourLikeId == null) {
-        this.$axios
-          .$post(`/article/like/${this.user.id}`, {
-            articleId: this.article._id,
-          })
-          .then((res) => {
-            this.yourLikeId = res._id;
-            this.likes.push(res._id);
-          });
-      } else {
-        this.$axios.$delete(`/article/like/${this.yourLikeId}`).then((res) => {
-          //remove object from array with condition
-          this.likes = this.likes.filter((like) => like._id == this.yourLikeId);
-          //set null
-          this.yourLikeId = null;
-        });
-      }
-    },
     download() {
       // Default export is a4 paper, portrait, using millimeters for units
-      const doc = new jsPDF({ orientation: "p", unit: "in", format: [8.3, 11.7] });
+      const doc = new jsPDF({
+        orientation: "p",
+        unit: "in",
+        format: [8.3, 11.7]
+      });
       const pageWidth = 8.3;
       const ptsPerInch = 72;
       const margin = 0.7;
@@ -288,7 +316,7 @@ export default {
         .setFontSize(fontSizeContent)
         .splitTextToSize(content, maxLineWidth);
 
-      textLines.forEach((value) => {
+      textLines.forEach(value => {
         doc.text(value, margin, bottomPositionText);
 
         //0.08 because the vertical distance is too tight.
@@ -309,18 +337,54 @@ export default {
       this.$axios
         .$post(`/article/comment/${this.$route.params.id}`, {
           userId: this.user.id,
-          comment: this.comment,
+          comment: this.comment
         })
-        .then((res) => {
-          console.log(res);
+        .then(res => {
           this.comments.push(res);
         });
     },
     deleteComment(commentId) {
-      this.$axios.$delete(`/article/comment/${commentId}`).then((res) => {
-        this.comments = this.comments.filter((comment) => comment._id != commentId);
+      this.$axios.$delete(`/article/comment/${commentId}`).then(res => {
+        this.comments = this.comments.filter(
+          comment => comment._id != commentId
+        );
       });
     },
-  },
+    like() {
+      if (this.yourLikeId == null) {
+        this.$axios
+          .$post(`/article/like/${this.user.id}`, {
+            articleId: this.article._id
+          })
+          .then(res => {
+            this.yourLikeId = res._id;
+            this.likes.push(res);
+          });
+      } else {
+        this.$axios.$delete(`/article/like/${this.yourLikeId}`).then(res => {
+          //remove object from array with condition
+          this.likes = this.likes.filter(like => like._id !== this.yourLikeId);
+          //set null
+          this.yourLikeId = null;
+        });
+      }
+    },
+    async save() {
+      if (this.yourBookmarkId == null) {
+        this.yourBookmarkId = await this.$axios.$post(
+          `/user/bookmark/${this.$route.params.id}`,
+          {
+            userId: this.user.id
+          }
+        );
+      } else {
+        this.$axios
+          .$delete(`/user/bookmark/${this.yourBookmarkId._id}`)
+          .then(res => {
+            this.yourBookmarkId = null;
+          });
+      }
+    }
+  }
 };
 </script>
