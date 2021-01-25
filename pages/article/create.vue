@@ -2,7 +2,7 @@
   <div>
     <div
       id="header"
-      class="flex items-center justify-between h-16 bg-gray-800 mb-2 px-32"
+      class="flex items-center justify-between h-16 bg-gray-800 px-32"
     >
       <div class="flex items-center">
         <div class="text-lg text-teal-500 font-bold">Create Article</div>
@@ -34,7 +34,7 @@
       </div>
     </div>
     <!-- EDIT MODE -->
-    <div v-if="preview == false" class="flex flex-wrap">
+    <div v-if="preview == false" class="flex flex-wrap mt-2">
       <div class="w-3/6 ml-48 mr-32 mt-12">
         <div id="edit-mode">
           <div class="mb-3 flex flex-row-reverse">
@@ -198,8 +198,8 @@
     </div>
 
     <!-- PREVIEW MODE -->
-    <div v-else id="preview-mode" class="ml-56 mr-56">
-      <div class="px-12 py-10">
+    <div v-else id="preview-mode" class="bg-gray-200 px-64 py-6">
+      <div class="bg-white rounded-lg">
         <!-- Thumbnail -->
         <div class="article__image mb-6">
           <img
@@ -215,24 +215,26 @@
             alt="article image"
           />
         </div>
-        <!-- Tags -->
-        <div class="article__tag relative">
-          <span
-            v-for="tag in tagsPreview"
-            :key="tag"
-            class="absloute bottom-0 bg-indigo-600 mr-2 px-2 py-1 text-white rounded-md"
-            >{{ tag }}
-          </span>
-        </div>
+        <div class="px-12 py-4">
+          <!-- Tags -->
+          <div class="article__tag relative">
+            <span
+              v-for="tag in tagsPreview"
+              :key="tag"
+              class="absloute bottom-0 bg-indigo-600 mr-2 px-2 py-1 text-white rounded-md"
+              >{{ tag }}
+            </span>
+          </div>
 
-        <div class="article__title mb-2">
-          <h1 class="text-4xl font-bold">{{ title }}</h1>
-        </div>
-        <div class="article__author mb-6">
-          <p class="text-lg">{{ user.name }}</p>
-        </div>
-        <div class="article__content h-full text-xl">
-          <div v-html="contentPreview"></div>
+          <div class="article__title mb-2">
+            <h1 class="text-4xl font-bold">{{ title }}</h1>
+          </div>
+          <div class="article__author mb-6">
+            <p class="text-lg">{{ user.name }}</p>
+          </div>
+          <div class="article__content h-full text-xl">
+            <div v-html="contentPreview"></div>
+          </div>
         </div>
       </div>
     </div>
