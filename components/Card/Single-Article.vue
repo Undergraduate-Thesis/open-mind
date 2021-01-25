@@ -117,16 +117,18 @@ export default Vue.extend({
     }
 
     // Get thumbnail
-    let thumbnailName = (this.article as any).thumbnail.fieldname;
-    const thumbnailType = (this.article as any).thumbnail.mimetype.replace(
-      "image/",
-      ""
-    );
-    const getThumbnail = await this.$axios.$get(
-      `/article/thumbnail/${thumbnailName}.${thumbnailType}`
-    );
-    const b64encoded = Buffer.from(getThumbnail.Body.data).toString("base64");
-    this.thumbnail = "data:image/jpg;base64," + b64encoded;
+    if ((this.article as any).thumbnail != null) {
+      let thumbnailName = (this.article as any).thumbnail.fieldname;
+      const thumbnailType = (this.article as any).thumbnail.mimetype.replace(
+        "image/",
+        ""
+      );
+      const getThumbnail = await this.$axios.$get(
+        `/article/thumbnail/${thumbnailName}.${thumbnailType}`
+      );
+      const b64encoded = Buffer.from(getThumbnail.Body.data).toString("base64");
+      this.thumbnail = "data:image/jpg;base64," + b64encoded;
+    }
 
     // Get Likes
     this.articleLikes = await this.$axios.$get(

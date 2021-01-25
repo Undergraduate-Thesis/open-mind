@@ -219,13 +219,17 @@ export default {
       // alert(date);
 
       // Get Thumbnail
-      let thumbnailName = article.thumbnail.fieldname;
-      const thumbnailType = article.thumbnail.mimetype.replace("image/", "");
-      const getThumbnail = await this.$axios.$get(
-        `/article/thumbnail/${thumbnailName}.${thumbnailType}`
-      );
-      const b64encoded = Buffer.from(getThumbnail.Body.data).toString("base64");
-      this.thumbnail = "data:image/jpg;base64," + b64encoded;
+      if (this.article.thumbnail != null) {
+        let thumbnailName = article.thumbnail.fieldname;
+        const thumbnailType = article.thumbnail.mimetype.replace("image/", "");
+        const getThumbnail = await this.$axios.$get(
+          `/article/thumbnail/${thumbnailName}.${thumbnailType}`
+        );
+        const b64encoded = Buffer.from(getThumbnail.Body.data).toString(
+          "base64"
+        );
+        this.thumbnail = "data:image/jpg;base64," + b64encoded;
+      }
 
       // Get Tags
       const tags = await this.$axios.$get(`/tag/${this.$route.params.id}`);
