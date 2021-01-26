@@ -10,9 +10,26 @@
                 src="https://tailwindui.com/img/logos/workflow-mark-on-dark.svg"
                 alt="Workflow logo"
               /> -->
-              <nuxt-link to="/" class="text-lg text-teal-500 font-bold"
-                >LOGO</nuxt-link
-              >
+              <div class="flex">
+                <nuxt-link to="/">
+                  <svg
+                    v-if="currentRoute != 'Home'"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <path fill="none" d="M0 0h24v24H0z" />
+                    <path
+                      d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"
+                      fill="rgba(56, 178, 172, 1)"
+                    />
+                  </svg>
+                </nuxt-link>
+                <span class="ml-2 text-lg text-teal-500 font-bold">{{
+                  currentRoute
+                }}</span>
+              </div>
             </div>
           </div>
           <div class="hidden md:block">
@@ -122,8 +139,29 @@ export default {
             return localStorage.getItem("access_token") || "";
           else return 0;
       },
-      dropdownOpen: false
+      dropdownOpen: false,
+      currentRoute: ""
     };
+  },
+  mounted() {
+    if (this.$route.name == "index") {
+      this.currentRoute = "Home";
+    } else if (this.$route.name == "article-id") {
+      this.currentRoute = "Detail Article";
+    } else if (this.$route.name == "profile") {
+      this.currentRoute = "Profile";
+    }
+  },
+  watch: {
+    $route(to, from) {
+      if (this.$route.name == "index") {
+        this.currentRoute = "Home";
+      } else if (this.$route.name == "article-id") {
+        this.currentRoute = "Detail Article";
+      } else if (this.$route.name == "profile") {
+        this.currentRoute = "Profile";
+      }
+    }
   },
   methods: {
     logout() {
