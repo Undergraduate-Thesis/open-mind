@@ -215,11 +215,44 @@ export default {
       const article = await this.$axios.$get(
         `/article/${this.$route.params.id}`
       );
-      const date = new Date(article.created_at);
-      // alert(date);
+      const md = require("markdown-it")();
+      article.content = md.render(article.content);
+
+      this.article = article;
+
+      // Get Tags
+      const tags = await this.$axios.$get(`/tag/${this.$route.params.id}`);
+      this.tags = tags;
+
+      // Get Likes
+      const likes = await this.$axios.$get(
+        `/article/like/${this.$route.params.id}`
+      );
+      this.likes = likes;
+      this.likes.forEach(element => {
+        if (element.user_id == this.user.id) {
+          this.yourLikeId = element._id;
+        }
+      });
+
+      // Get Comments
+      const comments = await this.$axios.$get(
+        `/article/comment/${this.$route.params.id}`
+      );
+      this.comments = comments;
+
+      // Get Bookmark
+      if (this.user != null) {
+        const bookmark = await this.$axios.$get(
+          `/user/singleBookmark/${this.user.id}/${this.$route.params.id}`
+        );
+        if (bookmark != "") {
+          this.yourBookmarkId = bookmark;
+        }
+      }
 
       // Get Thumbnail
-      if (this.article.thumbnail != null) {
+      if (article.thumbnail != null) {
         let thumbnailName = article.thumbnail.fieldname;
         const thumbnailType = article.thumbnail.mimetype.replace("image/", "");
         const getThumbnail = await this.$axios.$get(
@@ -231,34 +264,9 @@ export default {
         this.thumbnail = "data:image/jpg;base64," + b64encoded;
       }
 
-      // Get Tags
-      const tags = await this.$axios.$get(`/tag/${this.$route.params.id}`);
-      const likes = await this.$axios.$get(
-        `/article/like/${this.$route.params.id}`
-      );
-      const comments = await this.$axios.$get(
-        `/article/comment/${this.$route.params.id}`
-      );
-      if (this.user != null) {
-        const bookmark = await this.$axios.$get(
-          `/user/singleBookmark/${this.user.id}/${this.$route.params.id}`
-        );
-        if (bookmark != "") {
-          this.yourBookmarkId = bookmark;
-        }
-      }
-
-      this.article = article;
-      this.tags = tags;
-      this.likes = likes;
-      this.comments = comments;
-      this.likes.forEach(element => {
-        if (element.user_id == this.user.id) {
-          this.yourLikeId = element._id;
-        }
-      });
-      const md = require("markdown-it")();
-      article.content = md.render(article.content);
+      // Date
+      const date = new Date(article.created_at);
+      // alert(date);
     } catch (error) {
       console.log("error", error);
     }
