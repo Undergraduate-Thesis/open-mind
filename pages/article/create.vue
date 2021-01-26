@@ -2,10 +2,27 @@
   <div>
     <div
       id="header"
-      class="flex items-center justify-between h-16 bg-gray-800 px-32"
+      class="flex items-center justify-between h-16 bg-gray-800 pl-8 pr-32"
     >
       <div class="flex items-center">
-        <div class="text-lg text-teal-500 font-bold">Create Article</div>
+        <div class="flex">
+          <nuxt-link to="/">
+            <svg
+              v-if="currentRoute != 'Home'"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+            >
+              <path fill="none" d="M0 0h24v24H0z" />
+              <path
+                d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"
+                fill="rgba(56, 178, 172, 1)"
+              />
+            </svg>
+          </nuxt-link>
+          <div class="ml-2 text-lg text-teal-500 font-bold">Create Article</div>
+        </div>
       </div>
       <div id="action">
         <button
@@ -341,7 +358,9 @@ export default Vue.extend({
       data.append("content", this.content);
       // FIXME: remove summary property after summary get handle in backend
       data.append("summary", summary);
-      data.append("tags[]", tags);
+      tags.forEach(tag => {
+        data.append("tags[]", tag);
+      });
       data.append("author", user.id);
 
       this.$axios
