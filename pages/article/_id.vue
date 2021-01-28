@@ -7,7 +7,14 @@
           <div class="fixed">
             <button
               aria-label="Like Article"
-              class="relative w-32 flex justify-end py-2 px-4 mb-2 border-solid border-2 border-black text-sm leading-5 font-medium rounded-md hover:bg-gray-400"
+              :disabled="user == null"
+              class="relative w-32 flex justify-end py-2 px-4 mb-2 border-solid border-2 border-black text-sm leading-5 font-medium rounded-md"
+              :class="{
+                'disabled:opacity-50': user == null,
+                'hover:bg-gray-400': user != null,
+                'border-gray-600': user == null,
+                'text-gray-600': user == null
+              }"
               @click.prevent="like()"
             >
               <span class="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -21,11 +28,12 @@
                   <path
                     v-if="yourLikeId == null"
                     d="M20.243 4.757c2.262 2.268 2.34 5.88.236 8.236l-8.48 8.492-8.478-8.492c-2.104-2.356-2.025-5.974.236-8.236 2.265-2.264 5.888-2.34 8.244-.228 2.349-2.109 5.979-2.039 8.242.228zM5.172 6.172c-1.49 1.49-1.565 3.875-.192 5.451L12 18.654l7.02-7.03c1.374-1.577 1.299-3.959-.193-5.454-1.487-1.49-3.881-1.562-5.453-.186l-4.202 4.203-1.415-1.414 2.825-2.827-.082-.069c-1.575-1.265-3.877-1.157-5.328.295z"
+                    :fill="user == null && 'rgba(75, 85, 99, 1)'"
                   />
                   <path
                     v-else
                     d="M20.243 4.757c2.262 2.268 2.34 5.88.236 8.236l-8.48 8.492-8.478-8.492c-2.104-2.356-2.025-5.974.236-8.236C5.515 3 8.093 2.56 10.261 3.44L6.343 7.358l1.414 1.415L12 4.53l-.013-.014.014.013c2.349-2.109 5.979-2.039 8.242.228z"
-                    fill="rgba(241,24,24,1)"
+                    fill="rgba(241, 24, 24, 1)"
                   />
                 </svg>
               </span>
@@ -35,7 +43,14 @@
             <!--  BUTTON SAVE -->
             <button
               aria-label="Save Article"
-              class="relative w-32 flex justify-end py-2 px-4 mb-2 border-solid border-2 border-black text-sm leading-5 font-medium rounded-md hover:bg-gray-400"
+              :disabled="user == null"
+              class="relative w-32 flex justify-end py-2 px-4 mb-2 border-solid border-2 text-sm leading-5 font-medium rounded-md"
+              :class="{
+                'disabled:opacity-50': user == null,
+                'hover:bg-gray-400': user != null,
+                'border-gray-600': user == null,
+                'text-gray-600': user == null
+              }"
               @click.prevent="save()"
             >
               <span class="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -54,6 +69,7 @@
                   <path
                     v-else
                     d="M5 2h14a1 1 0 0 1 1 1v19.143a.5.5 0 0 1-.766.424L12 18.03l-7.234 4.536A.5.5 0 0 1 4 22.143V3a1 1 0 0 1 1-1zm13 2H6v15.432l6-3.761 6 3.761V4z"
+                    :fill="user == null && 'rgba(75, 85, 99, 1)'"
                   />
                 </svg>
               </span>
@@ -151,6 +167,7 @@
               class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
               rows="2"
               v-model="comment"
+              :disabled="user == null"
             ></textarea>
             <div class="relative w-full mb-6 h-4">
               <div class="absolute inset-y-0 right-0 w-16 ...">
