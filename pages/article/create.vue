@@ -50,6 +50,7 @@
         </button>
       </div>
     </div>
+    <alert v-if="showAlert" @closeAlert="showAlert = false"></alert>
     <!-- EDIT MODE -->
     <div v-if="preview == false" class="flex flex-wrap mt-2">
       <div class="w-3/6 ml-48 mr-32 mt-12">
@@ -213,7 +214,6 @@
         </div>
       </div>
     </div>
-
     <!-- PREVIEW MODE -->
     <div v-else id="preview-mode" class="bg-gray-200 px-64 py-6">
       <div class="bg-white rounded-lg">
@@ -260,8 +260,9 @@
 <script>
 import Vue from "vue";
 import ResizableTextarea from "@/plugins/ResizableTextarea.js";
+import Alert from "@/components/Article/alert";
 export default Vue.extend({
-  components: { ResizableTextarea },
+  components: { ResizableTextarea, Alert },
   data() {
     return {
       user: JSON.parse(localStorage.getItem("user")),
@@ -278,7 +279,10 @@ export default Vue.extend({
       // Change Color Focus
       colorImageIcon: "rgba(0,0,0,1)",
       colorCloseIcon: "rgba(0,0,0,1)",
-      colorImageChangeIcon: "rgba(0,0,0,1)"
+      colorImageChangeIcon: "rgba(0,0,0,1)",
+
+      // Alert Box
+      showAlert: false
     };
   },
   directives: {
@@ -358,21 +362,35 @@ export default Vue.extend({
       data.append("content", this.content);
       // FIXME: remove summary property after summary get handle in backend
       data.append("summary", summary);
+
+      // Validation Tag
+      const tagNotExists = [];
+      const contentWithoutSpace = this.content.replace(" ", "");
       tags.forEach(tag => {
+        const pattern = new RegExp(tag.replace("#", ""), "i");
+        const filter = contentWithoutSpace.match(pattern);
+        if (filter == null) {
+          tagNotExists.push(tag);
+        }
         data.append("tags[]", tag);
       });
+
       data.append("author", user.id);
 
-      this.$axios
-        .post("/article", data)
-        .then(res => {
-          if (res.status == 201) {
-            this.$router.push({ path: "/" });
-          }
-        })
-        .catch(err => {
-          console.log(err.response.data);
-        });
+      if (tagNotExists.length != 0 || this.title == "" || this.content == "") {
+        this.showAlert = true;
+      } else {
+        this.$axios
+          .post("/article", data)
+          .then(res => {
+            if (res.status == 201) {
+              this.$router.push({ path: "/" });
+            }
+          })
+          .catch(err => {
+            console.log(err.response.data);
+          });
+      }
     }
   }
 });
