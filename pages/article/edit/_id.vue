@@ -387,8 +387,8 @@ export default Vue.extend({
       this.$axios
         .put(`/article/${this.$route.params.id}`, data)
         .then(res => {
-          if (res.status == 201) {
-            this.$router.push({ path: "/" });
+          if (res.status == 200) {
+            this.$router.push({ path: `/article/${this.$route.params.id}` });
           }
         })
         .catch(err => {
