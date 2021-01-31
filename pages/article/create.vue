@@ -367,11 +367,18 @@ export default Vue.extend({
       const tagNotExists = [];
       const contentWithoutSpace = this.content.replace(" ", "");
       tags.forEach(tag => {
-        const pattern = new RegExp(tag.replace("#", ""), "i");
-        const filter = contentWithoutSpace.match(pattern);
-        if (filter == null) {
-          tagNotExists.push(tag);
-        }
+        let baseTag = tag.replace("#", "");
+        baseTag = baseTag.replace(/([a-zA-Z])(?=[A-Z])/g, "$1-").toLowerCase();
+        const tagValues = baseTag.split("-");
+
+        tagValues.forEach(value => {
+          const pattern = new RegExp(value, "i");
+
+          const filter = contentWithoutSpace.match(pattern);
+          if (filter == null) {
+            tagNotExists.push(tag);
+          }
+        });
         data.append("tags[]", tag);
       });
 
@@ -380,16 +387,16 @@ export default Vue.extend({
       if (tagNotExists.length != 0 || this.title == "" || this.content == "") {
         this.showAlert = true;
       } else {
-        this.$axios
-          .post("/article", data)
-          .then(res => {
-            if (res.status == 201) {
-              this.$router.push({ path: "/" });
-            }
-          })
-          .catch(err => {
-            console.log(err.response.data);
-          });
+        // this.$axios
+        //   .post("/article", data)
+        //   .then(res => {
+        //     if (res.status == 201) {
+        //       this.$router.push({ path: "/" });
+        //     }
+        //   })
+        //   .catch(err => {
+        //     console.log(err.response.data);
+        //   });
       }
     }
   }
