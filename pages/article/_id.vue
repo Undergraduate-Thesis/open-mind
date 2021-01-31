@@ -44,7 +44,7 @@
             <button
               aria-label="Save Article"
               :disabled="user == null"
-              class="relative w-32 flex justify-end py-2 px-4 mb-2 border-solid border-2 text-sm leading-5 font-medium rounded-md"
+              class="relative w-32 flex justify-end py-2 px-4 mb-2 border-solid border-2 border-black text-sm leading-5 font-medium rounded-md"
               :class="{
                 'disabled:opacity-50': user == null,
                 'hover:bg-gray-400': user != null,
