@@ -61,7 +61,8 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: process.env.BASE_URL || "http://api-openmind.victorycq.site/api/v1"
+    baseURL:
+      process.env.BASE_URL || "https://api-openmind.victorycq.site/api/v1"
   },
   /*
    ** Build configuration
