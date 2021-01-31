@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^1.0.0",
-    "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "any-text": "^1.1.0",
     "cookie": "^0.4.1",
@@ -20,7 +20,8 @@
     "markdown-it": "^12.0.0",
     "natural": "^2.1.5",
     "nuxt": "^2.14.0",
-    "remove-markdown": "^0.3.0"
+    "remove-markdown": "^0.3.0",
+    "svd-js": "^1.1.1"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.6",
