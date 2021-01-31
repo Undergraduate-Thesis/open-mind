@@ -387,16 +387,16 @@ export default Vue.extend({
       if (tagNotExists.length != 0 || this.title == "" || this.content == "") {
         this.showAlert = true;
       } else {
-        // this.$axios
-        //   .post("/article", data)
-        //   .then(res => {
-        //     if (res.status == 201) {
-        //       this.$router.push({ path: "/" });
-        //     }
-        //   })
-        //   .catch(err => {
-        //     console.log(err.response.data);
-        //   });
+        this.$axios
+          .post("/article", data)
+          .then(res => {
+            if (res.status == 201) {
+              this.$router.push({ path: "/" });
+            }
+          })
+          .catch(err => {
+            console.log(err.response.data);
+          });
       }
     }
   }
