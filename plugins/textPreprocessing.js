@@ -1,4 +1,5 @@
 import * as natural from "natural";
+import { SVD } from "svd-js";
 
 /**
  * Global Function
@@ -17,11 +18,21 @@ export default (context, inject) => {
       totalDocument
     );
     const tfIdfMatrix = await create_TF_IDF_Matrix(tfMatrix, idfMatrix);
-    const scoreSentences = await getScoreSentences(tfIdfMatrix);
-    const treshold = await findAverageScore(scoreSentences);
-    const summary = await generateSummary(sentences, scoreSentences, treshold);
 
-    return summary;
+    const { u, v, q } = await getSVD(tfIdfMatrix);
+    const getSummary = await crossMethod(
+      sentences,
+      v,
+      q,
+      Math.ceil(sentences.length * 0.5)
+    );
+
+    /* Metode lain */
+    // const scoreSentences = await getScoreSentences(tfIdfMatrix);
+    // const treshold = await findAverageScore(scoreSentences);
+    // const summary = await generateSummary(sentences, scoreSentences, treshold);
+
+    return getSummary;
   };
   const translateMarkdown = async content => {};
   // Inject $summary(contentArticle) in Vue, context and store.
@@ -131,47 +142,155 @@ const create_TF_IDF_Matrix = async (TF_Matrix, IDF_Matrix) => {
   }
   return TF_IDF_Matrix;
 };
-const getScoreSentences = async TF_IDF_Matrix => {
-  const sentenceValue = {};
-  TF_IDF_Matrix = Object.keys(TF_IDF_Matrix).map(e => ({
-    sentence: e,
-    freq_table: TF_IDF_Matrix[e]
-  }));
-  for (let i = 0; i < TF_IDF_Matrix.length; i++) {
-    let total_score_per_sentence = 0;
-    const sentence = TF_IDF_Matrix[i]["sentence"];
-    const count_words_in_sentence = Object.keys(TF_IDF_Matrix[i]["freq_table"])
-      .length; // count length property in object
-    for (const score of Object.values(TF_IDF_Matrix[i]["freq_table"])) {
-      total_score_per_sentence += score;
-    }
-    sentenceValue[sentence] =
-      total_score_per_sentence / count_words_in_sentence;
-  }
-  return sentenceValue;
-};
-const findAverageScore = async sentenceValue => {
-  let sumValues = 0;
-  for (const value of Object.values(sentenceValue)) {
-    if (
-      sumValues + value != Number.NaN &&
-      isNaN(sumValues + value) != true &&
-      typeof (sumValues + value != Number.NaN) != "undefined"
-    ) {
-      sumValues += value;
-    }
-  }
-  const average = sumValues / Object.keys(sentenceValue).length;
-  return average;
-};
-const generateSummary = async (sentences, sentenceValue, treshold) => {
-  let summary = "";
-  for (const sentence of sentences) {
-    for (const [key, value] of Object.entries(sentenceValue)) {
-      if (key.includes(sentence.substring(1, 15)) && value >= treshold) {
-        summary += sentence + ". ";
+
+const getWords = async sentences => {
+  const words = [];
+  for await (const [indexSentence, sentence] of Object.entries(sentences)) {
+    for await (const [indexword, word] of Object.entries(sentence)) {
+      if (words.includes(indexword) == false) {
+        words.push(indexword);
       }
     }
   }
+  return words;
+};
+
+const getSVD = async sentences => {
+  let inputSVD = new Array();
+
+  const words = await getWords(sentences);
+
+  let i = 0;
+  for await (const word of words) {
+    inputSVD[i] = new Array();
+    for await (const [indexSentence, sentence] of Object.entries(sentences)) {
+      if (indexSentence != "") {
+        let exists = false;
+        for await (const [indexWordInSentence, scoreWord] of Object.entries(
+          sentence
+        )) {
+          if (word == indexWordInSentence) {
+            exists = true;
+            inputSVD[i].push(scoreWord);
+          }
+        }
+        if (exists == false) {
+          inputSVD[i].push(0);
+        }
+      }
+    }
+    i++;
+  }
+
+  return SVD(inputSVD);
+};
+
+const steinbergerAndJezek = async (sentences, vt, s, numberOfTopic) => {
+  let summary = "";
+  let s_square = [];
+  let scores = [];
+  s.forEach((element, index) => {
+    if (index < numberOfTopic) {
+      s_square.push(Math.pow(element, 2));
+    } else {
+      s_square.push(0);
+    }
+  });
+  //transpose
+  const v = vt[0].map((_, colIndex) => vt.map(row => row[colIndex]));
+  v.forEach((element, index) => {
+    let score = 0;
+    //zip two array
+    var joinArray = s_square.map(function(e, i) {
+      // console.log(`${e} , ${element[i]}`);
+      return [e, element[i]]; //ini cek bener apa gak
+    });
+    joinArray.forEach(element => {
+      score += element[0] * Math.pow(element[1], 2);
+    });
+    scores.push(Math.sqrt(score));
+  });
+  //tambahkan index kalimat [0.372, 17] -> [score, index kalimat]
+  let scoresWithIndex = [];
+  scores.forEach((element, index) => {
+    scoresWithIndex.push([element, index]);
+  });
+  //ubah urutan array dari angka terbesar ke angka terkecil
+  const sortHighestScore = scoresWithIndex.sort(function(left, right) {
+    return left[0] > right[0] ? -1 : 1;
+  });
+  sortHighestScore.forEach((element, index) => {
+    if (index < numberOfTopic) {
+      //element[1] berisi index kalimat dan element[0] berisi score nya
+      summary += sentences[element[1]] + ".";
+    }
+  });
+
   return summary;
 };
+const crossMethod = async (sentences, vt, s, numberOfTopic) => {
+  vt.forEach((element, indexElement, vt) => {
+    const totalValue = element.reduce((a, b) => a + b);
+    const length = element.length;
+    const average = totalValue / length;
+
+    vt[indexElement].forEach((value, indexValue, element) => {
+      if (value < average) {
+        element[indexValue] = 0;
+      } else {
+        element[indexValue] = element[indexValue];
+      }
+    });
+  });
+  return steinbergerAndJezek(sentences, vt, s, numberOfTopic);
+};
+
+/*  METODE LAIN */
+// const getScoreSentences = async TF_IDF_Matrix => {
+//   const sentenceValue = {};
+//   TF_IDF_Matrix = Object.keys(TF_IDF_Matrix).map(e => ({
+//     sentence: e,
+//     freq_table: TF_IDF_Matrix[e]
+//   }));
+//   for (let i = 0; i < TF_IDF_Matrix.length; i++) {
+//     let total_score_per_sentence = 0;
+//     const sentence = TF_IDF_Matrix[i]["sentence"];
+//     const count_words_in_sentence = Object.keys(TF_IDF_Matrix[i]["freq_table"])
+//       .length; // count length property in object
+//     for (const score of Object.values(TF_IDF_Matrix[i]["freq_table"])) {
+//       total_score_per_sentence += score;
+//     }
+//     sentenceValue[sentence] =
+//       total_score_per_sentence / count_words_in_sentence;
+//   }
+//   return sentenceValue;
+// };
+// const findAverageScore = async sentenceValue => {
+//   let sumValues = 0;
+//   for (const value of Object.values(sentenceValue)) {
+//     if (
+//       sumValues + value != Number.NaN &&
+//       isNaN(sumValues + value) != true &&
+//       typeof (sumValues + value != Number.NaN) != "undefined"
+//     ) {
+//       sumValues += value;
+//     }
+//   }
+//   const average = sumValues / Object.keys(sentenceValue).length;
+//   return average;
+// };
+// const generateSummary = async (sentences, sentenceValue, treshold) => {
+//   let summary = "";
+//   for (const sentence of sentences) {
+//     for (const [key, value] of Object.entries(sentenceValue)) {
+//       if (
+//         key.includes(sentence.substring(1, 15)) &&
+//         value >= treshold &&
+//         sentence.length != 0
+//       ) {
+//         summary += sentence + ".";
+//       }
+//     }
+//   }
+//   return summary;
+// };
