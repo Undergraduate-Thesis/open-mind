@@ -2,7 +2,7 @@
   <div id="article" class="bg-gray-200 px-52 py-8">
     <div class="flex flex-wrap">
       <!--LEFT -->
-      <div class="relative lg:w-2/12">
+      <div class="relative md:w-2/12 lg:w-2/12">
         <div class="absolute inset-y-0 right-0 w-32 mr-3 my-40">
           <div class="fixed">
             <button
@@ -102,7 +102,7 @@
       </div>
       <!--RIGHT -->
       <!-- Detail Article -->
-      <div class="w-full lg:w-8/12">
+      <div class="w-full md:w-8/12 lg:w-8/12">
         <div class="bg-white mb-6 rounded-lg">
           <div class="article__image">
             <img
