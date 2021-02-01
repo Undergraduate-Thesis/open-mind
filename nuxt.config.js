@@ -42,12 +42,12 @@ export default {
       {
         property: "twitter:description",
         content:
-          "This is my Undergraduate Thesis, you can write your article and we will summarize for you and the other people who need"
+          "This is my Undergraduate Thesis, you can write your article and we will summarize for you and the other people who need."
       },
       {
         property: "twitter:image",
         content:
-          "https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
+          "https://s3-id-jkt-1.kilatstorage.id/nanas-experience/victor/meta_tag.PNG"
       }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
