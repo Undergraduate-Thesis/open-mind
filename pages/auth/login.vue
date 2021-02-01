@@ -118,7 +118,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    Sigin(email, password) {
+    Sigin() {
       this.errorMessage = "";
       this.$axios
         .post("/auth/login", {
@@ -130,6 +130,7 @@ export default Vue.extend({
             localStorage.setItem("access_token", res.data.token);
             localStorage.setItem("user", JSON.stringify(res.data.user));
           }
+          this.$axios.setToken(res.data.token, "Bearer");
           this.$router.push({ path: "/" });
         })
         .catch(err => {
