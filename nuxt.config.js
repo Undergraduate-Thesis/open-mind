@@ -14,14 +14,40 @@ export default {
    ** See https://nuxtjs.org/api/configuration-head
    */
   head: {
-    title: process.env.npm_package_name || "",
+    title:
+      process.env.npm_package_name ||
+      "Undergraduate Thesis - Summarize Article",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        hid: "description",
-        name: "description",
-        content: process.env.npm_package_description || ""
+        hid: "title",
+        name: "title",
+        content:
+          process.env.npm_package_description ||
+          "This is my Undergraduate Thesis, you can write your article and we will summarize for you and the other people who need."
+      },
+      {
+        property: "twitter:card",
+        content: "summary_large_image"
+      },
+      {
+        property: "twitter:url",
+        content: "https://metatags.io/"
+      },
+      {
+        property: "twitter:title",
+        content: "Undergraduate Thesis - Summarize Article"
+      },
+      {
+        property: "twitter:description",
+        content:
+          "This is my Undergraduate Thesis, you can write your article and we will summarize for you and the other people who need"
+      },
+      {
+        property: "twitter:image",
+        content:
+          "https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
       }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
