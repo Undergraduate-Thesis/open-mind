@@ -1,7 +1,7 @@
 <template>
   <div class="card">
-    <div class="my-3 lg:flex md:flex justify-center rounded-md bg-white">
-      <div class="lg:w-2/5 md:w-2/5">
+    <div class="my-3 md:flex lg:flex justify-center rounded-md bg-white">
+      <div class=" md:w-2/5 lg:w-2/5">
         <div
           v-if="thumbnail != ''"
           class="h-64 bg-cover rounded-lg h-full cursor-pointer"
@@ -15,7 +15,7 @@
           style="background-image: url('https://images.unsplash.com/photo-1587814969489-e5df12e17391?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NHx8c29jaWFsJTIwZGlzdGFuY2UlMjBhbmQlMjBzdGF5JTIwc2FmZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"
         ></div>
       </div>
-      <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl lg:w-3/5 md:w-3/5">
+      <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl md:w-3/5 lg:w-3/5">
         <nuxt-link :to="`/article/${article._id}`"
           ><h2 class="text-3xl text-gray-800 font-bold hover:text-blue-700">
             {{ article.title }}
