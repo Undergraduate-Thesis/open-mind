@@ -335,6 +335,7 @@ export default Vue.extend({
           if (register) {
             localStorage.setItem("access_token", register.data.token);
             localStorage.setItem("user", JSON.stringify(register.data.user));
+            this.$axios.setToken(res.data.token, "Bearer");
             this.$router.push({ path: "/" });
           }
         } else {
