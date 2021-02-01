@@ -15,13 +15,19 @@
     <div class="profile__content mx-64 px-12 py-4 bg-gray-200 rounded-md">
       <div class="button__group justify-center flex">
         <button
-          @click="getArticle"
+          @click="
+            getArticle();
+            isBookmarkArticle = false;
+          "
           class="border bg-gray-900 text-white -white font-normal py-2 px-4 rounded"
         >
           Your Article
         </button>
         <button
-          @click="getBookmark"
+          @click="
+            getBookmark();
+            isBookmarkArticle = true;
+          "
           class="border bg-gray-900 text-white -white font-normal py-2 px-4 rounded"
         >
           Article Saved
@@ -64,14 +70,26 @@
               Detail
             </nuxt-link>
             <nuxt-link
+              v-if="isBookmarkArticle == false"
               @click.native="$event.stopImmediatePropagation()"
               :to="`/article/edit/${article._id}`"
               class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
             >
               Edit
             </nuxt-link>
+
+            <!-- Delete -->
             <button
+              v-if="isBookmarkArticle == false"
               @click="deleteArticle(index)"
+              to="/404"
+              class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
+            >
+              Delete
+            </button>
+            <button
+              v-else
+              @click="deleteBookmark(index)"
               to="/404"
               class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
             >
@@ -98,7 +116,8 @@ export default {
   data() {
     return {
       user: JSON.parse(localStorage.getItem("user")) || null,
-      articles: []
+      articles: [],
+      isBookmarkArticle: false
     };
   },
   async mounted() {
@@ -118,9 +137,10 @@ export default {
       );
 
       bookmarks.forEach(async bookmark => {
-        const article = await this.$axios.$get(
-          `/article/${bookmark.article_id}`
-        );
+        let article = await this.$axios.$get(`/article/${bookmark.article_id}`);
+
+        //insert bookmark_id in object article
+        article.bookmark_id = bookmark._id;
 
         this.articles.push(article);
       });
@@ -129,6 +149,10 @@ export default {
       const removedArticle = this.articles.splice(indexArticle, 1);
       console.log(removedArticle[0]);
       this.$axios.$delete(`/article/${removedArticle[0]._id}`);
+    },
+    deleteBookmark(indexBookmark) {
+      const removeBookmark = this.articles.splice(indexBookmark, 1);
+      this.$axios.$delete(`/user/bookmark/${removeBookmark[0].bookmark_id}`);
     }
   }
 };
