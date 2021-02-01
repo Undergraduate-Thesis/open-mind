@@ -32,18 +32,18 @@
       <div
         v-for="(article, index) in articles"
         :key="index"
-        class="card my-3 lg:flex lg:justify-center rounded-md bg-white"
+        class="card my-3 lg:flex md:flex justify-center rounded-md bg-white"
       >
-        <div class="lg:w-2/6">
+        <div class="lg:w-2/6 md:w-2/6">
           <div
-            class="h-64 bg-cover lg:rounded-lg lg:h-full cursor-pointer"
+            class="h-64 bg-cover lg:rounded-lg h-full cursor-pointer"
             @click="openArticle(article._id)"
             style="
             background-image: url('https://images.unsplash.com/photo-1497493292307-31c376b6e479?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80');
           "
           ></div>
         </div>
-        <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl lg:w-4/6">
+        <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl lg:w-4/6 md:w-4/6">
           <nuxt-link
             @click.native="$event.stopImmediatePropagation()"
             :to="`/article/${article._id}`"
