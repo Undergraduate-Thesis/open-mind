@@ -42,11 +42,16 @@
       >
         <div class="lg:w-2/6 md:w-2/6">
           <div
-            class="h-64 bg-cover lg:rounded-lg h-full cursor-pointer"
+            v-if="article.thumbnailSrc != ''"
+            class="h-64 bg-cover rounded-lg h-full cursor-pointer"
             @click="openArticle(article._id)"
-            style="
-            background-image: url('https://images.unsplash.com/photo-1497493292307-31c376b6e479?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80');
-          "
+            :style="{ backgroundImage: `url(${article.thumbnailSrc})` }"
+          ></div>
+          <div
+            v-else
+            class="h-64 bg-cover rounded-lg h-full cursor-pointer"
+            @click="openArticle(article._id)"
+            style="background-image: url('https://images.unsplash.com/photo-1587814969489-e5df12e17391?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NHx8c29jaWFsJTIwZGlzdGFuY2UlMjBhbmQlMjBzdGF5JTIwc2FmZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"
           ></div>
         </div>
         <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl lg:w-4/6 md:w-4/6">
@@ -125,10 +130,33 @@ export default {
   },
   methods: {
     async getArticle() {
+      // Clear array
       this.articles = [];
-      this.articles = await this.$axios.$get(
+
+      // Fetch article
+      let articles = await this.$axios.$get(
         `/article/userArticles/${this.user.id}`
       );
+
+      articles.forEach(async article => {
+        // Fetch thumbnail
+        if (article.thumbnail != null) {
+          let thumbnailName = article.thumbnail.fieldname;
+          const thumbnailType = article.thumbnail.mimetype.replace(
+            "image/",
+            ""
+          );
+          const getThumbnail = await this.$axios.$get(
+            `/article/thumbnail/${thumbnailName}.${thumbnailType}`
+          );
+          const b64encoded = Buffer.from(getThumbnail.Body.data).toString(
+            "base64"
+          );
+          article.thumbnailSrc = "data:image/jpg;base64," + b64encoded;
+          this.articles.push(article);
+        }
+      });
+      console.log(this.articles);
     },
     async getBookmark() {
       this.articles = [];
