@@ -1,5 +1,14 @@
 <template>
   <div class="layout flex flex-col h-screen">
+    <!-- if we accessed from smartphone -->
+    <div
+      class="absolute p-6 z-40 h-full w-full bg-black text-white text-center text-xl font-bold sm:invisible"
+    >
+      Mohon maaf, design dibuat khusus tablet / PC. Ubah ke mode 'Desktop Site'
+      dulu kalo mau akses dari smartphone.
+    </div>
+
+    <!-- if web accessed from tablet or PC -->
     <header class="bg-gray-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
