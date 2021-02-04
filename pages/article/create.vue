@@ -293,10 +293,16 @@ export default Vue.extend({
       }
     }
   },
+  watch: {
+    content: function(val) {
+      localStorage.setItem("ongoing-article", val);
+    }
+  },
+  mounted() {
+    if (localStorage.getItem("ongoing-article") != null)
+      this.content = localStorage.getItem("ongoing-article");
+  },
   methods: {
-    test() {
-      alert("masuk");
-    },
     triggerButtonFile() {
       const button = document.querySelector("#browseFile");
       button.click();
@@ -391,6 +397,7 @@ export default Vue.extend({
           .post("/article", data)
           .then(res => {
             if (res.status == 201) {
+              localStorage.removeItem("ongoing-article");
               this.$router.push({ path: "/" });
             }
           })
