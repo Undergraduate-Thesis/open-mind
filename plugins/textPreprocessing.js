@@ -219,11 +219,18 @@ const steinbergerAndJezek = async (sentences, vt, s, numberOfTopic) => {
   const sortHighestScore = scoresWithIndex.sort(function(left, right) {
     return left[0] > right[0] ? -1 : 1;
   });
-  sortHighestScore.forEach((element, index) => {
-    if (index < numberOfTopic) {
-      //element[1] berisi index kalimat dan element[0] berisi score nya
-      summary += sentences[element[1]] + ".";
-    }
+
+  // Potong jumlah kalimat yang dimasukkan kedalam ringkasan
+  sortHighestScore.length = numberOfTopic;
+
+  const sortIndexSentence = sortHighestScore.sort(function(left, right) {
+    return left[1] > right[1] ? 1 : -1;
+  });
+
+  // Buat jadi paragraf utuh lagi
+  sortIndexSentence.forEach(element => {
+    //element[1] berisi index kalimat dan element[0] berisi score nya
+    summary += sentences[element[1]] + ".";
   });
 
   return summary;
