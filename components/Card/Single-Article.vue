@@ -6,7 +6,7 @@
           v-if="thumbnail != ''"
           class="h-64 bg-cover rounded-lg h-full cursor-pointer"
           @click="openArticle(article._id)"
-          :style="{ backgroundImage: `url(${thumbnail})` }"
+          :style="{ backgroundImage: `url(${article.thumbnail.link})` }"
         ></div>
         <div
           v-else
@@ -100,7 +100,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      thumbnail: "",
       spoiler: "",
       articleLikes: [],
       articleComment: []
@@ -114,20 +113,6 @@ export default Vue.extend({
       });
     } else {
       this.spoiler = (this.article as any).content;
-    }
-
-    // Get thumbnail
-    if ((this.article as any).thumbnail != null) {
-      let thumbnailName = (this.article as any).thumbnail.fieldname;
-      const thumbnailType = (this.article as any).thumbnail.mimetype.replace(
-        "image/",
-        ""
-      );
-      const getThumbnail = await this.$axios.$get(
-        `/article/thumbnail/${thumbnailName}.${thumbnailType}`
-      );
-      const b64encoded = Buffer.from(getThumbnail.Body.data).toString("base64");
-      this.thumbnail = "data:image/jpg;base64," + b64encoded;
     }
 
     // Get Likes

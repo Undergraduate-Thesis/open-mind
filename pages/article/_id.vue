@@ -106,9 +106,9 @@
         <div class="bg-white mb-6 rounded-lg">
           <div class="article__image">
             <img
-              v-if="thumbnail != ''"
+              v-if="article.thumbnail != null"
               class="object-cover w-full h-64 rounded-t-lg"
-              :src="thumbnail"
+              :src="article.thumbnail.link"
               alt="article image"
             />
             <img
@@ -215,7 +215,6 @@ export default {
   data() {
     return {
       user: JSON.parse(localStorage.getItem("user")),
-      thumbnail: "",
       article: {},
       summary: false,
       tags: [],
@@ -232,6 +231,16 @@ export default {
       const article = await this.$axios.$get(
         `/article/${this.$route.params.id}`
       );
+
+      const created_at = new Date(article.created_at);
+      article.created_at = `${created_at.getDate()} ${created_at.toLocaleString(
+        "default",
+        { month: "short" }
+      )} ${created_at.getFullYear()} ${created_at.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      })}`;
+
       const md = require("markdown-it")();
       article.content = md.render(article.content);
 
@@ -268,21 +277,8 @@ export default {
         }
       }
 
-      // Get Thumbnail
-      if (article.thumbnail != null) {
-        let thumbnailName = article.thumbnail.fieldname;
-        const thumbnailType = article.thumbnail.mimetype.replace("image/", "");
-        const getThumbnail = await this.$axios.$get(
-          `/article/thumbnail/${thumbnailName}.${thumbnailType}`
-        );
-        const b64encoded = Buffer.from(getThumbnail.Body.data).toString(
-          "base64"
-        );
-        this.thumbnail = "data:image/jpg;base64," + b64encoded;
-      }
-
-      // Date
-      const date = new Date(article.created_at);
+      // // Date
+      // const date = new Date(article.created_at);
       // alert(date);
     } catch (error) {
       console.log("error", error);

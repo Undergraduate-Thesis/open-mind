@@ -3,10 +3,19 @@
     <div class="profile__header mt-5 mb-5">
       <div class="block justify-center flex">
         <img
-          class="w-40 h-40 rounded-full object-cover mr-4 shadow"
-          src="https://images.unsplash.com/photo-1542156822-6924d1a71ace?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+          class="w-40 h-40 rounded-full object-cover shadow"
+          :src="user.photo.link"
           alt="avatar"
         />
+        <div class="relative">
+          <nuxt-link
+            to="/profile/update"
+            tag="button"
+            class="absolute bottom-0 -left-4 w-32 px-1.5 py-1.5 border border-yellow-500 text-yellow-500 hover:text-white hover:bg-yellow-600 focus:outline-none rounded-md"
+          >
+            Update Profile
+          </nuxt-link>
+        </div>
       </div>
       <p class="block justify-center mt-5 mb-5 flex text-2xl font-bold">
         {{ user.name }}
@@ -42,10 +51,10 @@
       >
         <div class="lg:w-2/6 md:w-2/6">
           <div
-            v-if="article.thumbnailSrc != ''"
+            v-if="article.thumbnail != null"
             class="h-64 bg-cover rounded-lg h-full cursor-pointer"
             @click="openArticle(article._id)"
-            :style="{ backgroundImage: `url(${article.thumbnailSrc})` }"
+            :style="{ backgroundImage: `url(${article.thumbnail.link})` }"
           ></div>
           <div
             v-else
@@ -107,6 +116,11 @@
   </div>
 </template>
 <style scoped>
+.-left-4 {
+  left: -1rem;
+}
+</style>
+<style scoped>
 .spoiler--3line {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -130,33 +144,10 @@ export default {
   },
   methods: {
     async getArticle() {
-      // Clear array
-      this.articles = [];
-
       // Fetch article
-      let articles = await this.$axios.$get(
+      this.articles = await this.$axios.$get(
         `/article/userArticles/${this.user.id}`
       );
-
-      articles.forEach(async article => {
-        // Fetch thumbnail
-        if (article.thumbnail != null) {
-          let thumbnailName = article.thumbnail.fieldname;
-          const thumbnailType = article.thumbnail.mimetype.replace(
-            "image/",
-            ""
-          );
-          const getThumbnail = await this.$axios.$get(
-            `/article/thumbnail/${thumbnailName}.${thumbnailType}`
-          );
-          const b64encoded = Buffer.from(getThumbnail.Body.data).toString(
-            "base64"
-          );
-          article.thumbnailSrc = "data:image/jpg;base64," + b64encoded;
-          this.articles.push(article);
-        }
-      });
-      console.log(this.articles);
     },
     async getBookmark() {
       this.articles = [];
