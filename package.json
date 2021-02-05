@@ -16,6 +16,8 @@
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "any-text": "^1.1.0",
     "cookie": "^0.4.1",
+    "docx4js": "^3.2.16",
+    "docxtemplater": "^3.19.9",
     "jspdf": "^2.2.0",
     "markdown-it": "^12.0.0",
     "natural": "^2.1.5",
