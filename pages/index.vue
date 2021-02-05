@@ -3,12 +3,12 @@
     <div class="bg-white shadow">
       <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between">
-          <h1 class="leading-tight text-gray-900">
+          <h1 class="leading-tight text-base md:text-gray-900">
             {{ currentTime }}, {{ user != null ? user.name : "" }}
           </h1>
           <!-- component -->
           <!-- This is an example component -->
-          <div class="pt-2 relative text-gray-600">
+          <div class="hidden md:block pt-2 relative text-gray-600">
             <input
               v-model="textSearch"
               class="border-2 z-0 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
@@ -110,7 +110,7 @@ export default Vue.extend({
   layout: "container",
   components: {
     singleArticle,
-    skeletonArticle,
+    skeletonArticle
   },
   data() {
     return {
@@ -129,7 +129,7 @@ export default Vue.extend({
       currentTime: "",
       articles: [],
       tags: [],
-      textSearch: "",
+      textSearch: ""
     };
   },
   async mounted() {
@@ -168,7 +168,7 @@ export default Vue.extend({
     async search() {
       try {
         this.articles = await this.$axios.$post("/article/search", {
-          text: this.textSearch,
+          text: this.textSearch
         });
         console.log(this.articles);
       } catch (error) {
@@ -179,7 +179,7 @@ export default Vue.extend({
       localStorage.clear();
       window.location.reload(true);
       // this.$router.push({ path: "/404" });
-    },
-  },
+    }
+  }
 });
 </script>

@@ -2,7 +2,7 @@
   <div>
     <div
       id="header"
-      class="flex items-center justify-between h-16 bg-gray-800 pl-8 pr-32"
+      class="flex items-center justify-between h-16 bg-gray-800 pl-4 pr-4 lg:pl-8 lg:pr-32"
     >
       <div class="flex items-center">
         <div class="flex">
@@ -52,8 +52,8 @@
     </div>
     <alert v-if="showAlert" @closeAlert="showAlert = false"></alert>
     <!-- EDIT MODE -->
-    <div v-if="preview == false" class="flex flex-wrap mt-2">
-      <div class="w-3/6 ml-48 mr-32 mt-12">
+    <div v-if="preview == false" class="lg:flex lg:flex-wrap mt-2">
+      <div class="lg:w-3/6 mx-12 mt-6 lg:ml-32 lg:mr-32 lg:mt-12">
         <div id="edit-mode">
           <div class="mb-3 flex flex-row-reverse">
             <input
@@ -70,7 +70,7 @@
                 @mouseover="colorImageIcon = 'rgba(255,255,255,1)'"
                 @mouseleave="colorImageIcon = 'rgba(0,0,0,1)'"
                 @click="triggerButtonThumbnail"
-                class="bg-white text-gray-800 rounded border-b-2 border-gray-800 hover:border-gray-600 hover:bg-gray-800 hover:text-white shadow-md py-2 px-6 inline-flex items-center focus:outline-none"
+                class="mr-4 bg-white text-gray-800 rounded border-b-2 border-gray-800 hover:border-gray-600 hover:bg-gray-800 hover:text-white shadow-md py-2 px-6 inline-flex items-center focus:outline-none"
               >
                 <span class="mr-2">Add Thumbnail</span>
                 <svg
@@ -113,7 +113,7 @@
                 @mouseover="colorCloseIcon = 'rgba(255,255,255,1)'"
                 @mouseleave="colorCloseIcon = 'rgba(0,0,0,1)'"
                 @click="removeThumbnail"
-                class="bg-white text-gray-800 rounded border-b-2 border-red-600 hover:border-red-800 hover:bg-red-700 hover:text-white shadow-md py-2 px-6 inline-flex items-center focus:outline-none"
+                class="mr-10 bg-white text-gray-800 rounded border-b-2 border-red-600 hover:border-red-800 hover:bg-red-700 hover:text-white shadow-md py-2 px-6 inline-flex items-center focus:outline-none"
               >
                 <span class="mr-2">Remove</span>
                 <svg
@@ -185,7 +185,10 @@
         </div>
       </div>
 
-      <div id="hint" class="w-1/4 h-screen p-8 border-l-2 border-gray-400">
+      <div
+        id="hint"
+        class="hidden lg:inline w-3/12 h-screen p-8 border-l-2 border-gray-400"
+      >
         <div class="mb-6">
           <h4>Title</h4>
           <p class="text-gray-600">
@@ -215,7 +218,11 @@
       </div>
     </div>
     <!-- PREVIEW MODE -->
-    <div v-else id="preview-mode" class="bg-gray-200 px-64 py-6">
+    <div
+      v-else
+      id="preview-mode"
+      class="h-full bg-gray-200 px-12 py-6 lg:px-64"
+    >
       <div class="bg-white rounded-lg">
         <!-- Thumbnail -->
         <div class="article__image mb-6">
@@ -317,6 +324,7 @@ export default Vue.extend({
     readFile(event) {
       const fs = require("fs");
       const file = event.target.files[0];
+      console.log(file);
       let fr = new FileReader();
       fr.onload = e => {
         this.content = e.target.result;

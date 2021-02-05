@@ -17,7 +17,9 @@
       </div>
       <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl md:w-3/5 lg:w-3/5">
         <nuxt-link :to="`/article/${article._id}`"
-          ><h2 class="text-3xl text-gray-800 font-bold hover:text-blue-700">
+          ><h2
+            class="text-xl md:text-3xl text-gray-800 font-bold hover:text-blue-700"
+          >
             {{ article.title }}
           </h2>
         </nuxt-link>
