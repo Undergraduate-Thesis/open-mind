@@ -70,7 +70,7 @@
                   v-model="name"
                 />
               </div>
-              <div class="mb-6">
+              <!-- <div class="mb-6">
                 <label
                   class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   for="gender"
@@ -99,7 +99,7 @@
                     </svg>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="mb-6">
                 <label
                   class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
