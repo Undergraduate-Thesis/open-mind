@@ -1,5 +1,5 @@
 <template>
-  <div id="article" class="bg-gray-200 px-52 py-8">
+  <div id="article" class="bg-gray-200 px-52 lg:py-8">
     <div class="flex flex-wrap">
       <!--LEFT -->
       <div class="relative md:w-2/12 lg:w-2/12">
@@ -107,7 +107,7 @@
           <div class="article__image">
             <img
               v-if="article.thumbnail != null"
-              class="object-cover w-full h-64 rounded-t-lg"
+              class="object-cover w-full h-64 lg:rounded-t-lg"
               :src="article.thumbnail.link"
               alt="article image"
             />
@@ -119,7 +119,7 @@
             />
           </div>
 
-          <div class="px-12 py-10">
+          <div class="px-4 py-10 lg:px-12">
             <div class="flex justify-between">
               <div class="article__tag relative">
                 <span
@@ -130,7 +130,7 @@
                 </span>
               </div>
               <button
-                class="bg-gray-900 text-gray-100 px-5 py-2 font-semibold rounded"
+                class="text-sm lg:text-base bg-gray-900 text-gray-100 px-5 py-2 font-semibold rounded"
                 @click="summary = !summary"
               >
                 <p v-if="summary == false">Generate Summary</p>
@@ -139,7 +139,9 @@
             </div>
 
             <div class="article__title mb-2">
-              <h1 class="text-4xl font-bold">{{ article.title }}</h1>
+              <h1 class="text-2xl lg:text-4xl font-bold">
+                {{ article.title }}
+              </h1>
             </div>
             <div class="article__author mb-6">
               <p class="text-lg">

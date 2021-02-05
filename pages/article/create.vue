@@ -218,11 +218,7 @@
       </div>
     </div>
     <!-- PREVIEW MODE -->
-    <div
-      v-else
-      id="preview-mode"
-      class="h-full bg-gray-200 px-12 py-6 lg:px-64"
-    >
+    <div v-else id="preview-mode" class="h-full bg-gray-200 px-4 py-4 lg:px-64">
       <div class="bg-white rounded-lg">
         <!-- Thumbnail -->
         <div class="article__image mb-6">
@@ -239,7 +235,7 @@
             alt="article image"
           />
         </div>
-        <div class="px-12 py-4">
+        <div class="px-4 py-4 lg:px-12">
           <!-- Tags -->
           <div class="article__tag relative">
             <span
@@ -251,7 +247,7 @@
           </div>
 
           <div class="article__title mb-2">
-            <h1 class="text-4xl font-bold">{{ title }}</h1>
+            <h1 class="text-2xl lg:text-4xl font-bold">{{ title }}</h1>
           </div>
           <div class="article__author mb-6">
             <p class="text-lg">{{ user.name }}</p>
