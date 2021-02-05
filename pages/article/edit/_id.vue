@@ -153,6 +153,7 @@
               type="file"
               name="text"
               value="text"
+              accept="text/plain, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .doc, .docx"
               @change="readFile($event)"
               hidden
             />
@@ -243,6 +244,8 @@
 <script>
 import Vue from "vue";
 import ResizableTextarea from "@/plugins/ResizableTextarea.js";
+import docx4js from "docx4js";
+import Docxtemplater from "docxtemplater";
 export default Vue.extend({
   components: { ResizableTextarea },
   data() {
@@ -320,16 +323,22 @@ export default Vue.extend({
     removeThumbnail() {
       this.thumbnail = null;
     },
-    readFile(event) {
-      const fs = require("fs");
+    async readFile(event) {
       const file = event.target.files[0];
-      let fr = new FileReader();
-      fr.onload = e => {
-        this.content = e.target.result;
-      };
+      if (file.type == "text/plain") {
+        let fr = new FileReader();
+        fr.onload = e => {
+          this.content = e.target.result;
+        };
 
-      // fr.readAsText(file);
-      fr.readAsText(file);
+        // fr.readAsText(file);
+        fr.readAsText(file);
+      } else {
+        docx4js.load(file).then(docx => {
+          var doc = new Docxtemplater().loadZip(docx.raw);
+          this.content = doc.getFullText();
+        });
+      }
     },
     setThumbnail(event) {
       const file = event.target.files[0];
