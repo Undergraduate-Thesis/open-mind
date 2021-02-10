@@ -3,7 +3,7 @@
     <div class="my-3 md:flex lg:flex justify-center rounded-md bg-white">
       <div class=" md:w-2/5 lg:w-2/5">
         <div
-          v-if="thumbnail != ''"
+          v-if="article.thumbnail != null"
           class="h-64 bg-cover rounded-lg h-full cursor-pointer"
           @click="openArticle(article._id)"
           :style="{ backgroundImage: `url(${article.thumbnail.link})` }"
