@@ -70,7 +70,7 @@
               </button>
             </div>
             <div v-else>
-              <span>{{ thumbnail.fieldname }}.jpg</span>
+              <span>{{ thumbnail.name }}</span>
               <button
                 @mouseover="colorImageChangeIcon = 'rgba(255,255,255,1)'"
                 @mouseleave="colorImageChangeIcon = 'rgba(0,0,0,1)'"
@@ -252,6 +252,7 @@ export default Vue.extend({
     return {
       user: JSON.parse(localStorage.getItem("user")),
       thumbnail: null,
+      pathThumbnail: "",
       thumbnailPreview: "",
       title: "",
       content: "",
@@ -284,8 +285,10 @@ export default Vue.extend({
 
       this.title = article.title;
       this.content = article.content;
-      this.thumbnail = article.thumbnail;
-      console.log(this.thumbnail);
+      this.thumbnail = {
+        name: article.thumbnail.path.replace("victor/article/", "")
+      };
+      this.pathThumbnail = article.thumbnail.path;
 
       // Get Tags
       const tags = await this.$axios.$get(`/tag/${this.$route.params.id}`);
@@ -299,15 +302,7 @@ export default Vue.extend({
 
       // Get Thumbnail
       if (article.thumbnail != null) {
-        let thumbnailName = article.thumbnail.fieldname;
-        const thumbnailType = article.thumbnail.mimetype.replace("image/", "");
-        const getThumbnail = await this.$axios.$get(
-          `/article/thumbnail/${thumbnailName}.${thumbnailType}`
-        );
-        const b64encoded = Buffer.from(getThumbnail.Body.data).toString(
-          "base64"
-        );
-        this.thumbnailPreview = "data:image/jpg;base64," + b64encoded;
+        this.thumbnailPreview = article.thumbnail.link;
       }
     } catch (error) {}
   },
@@ -322,6 +317,7 @@ export default Vue.extend({
     },
     removeThumbnail() {
       this.thumbnail = null;
+      this.thumbnailPreview = "";
     },
     async readFile(event) {
       const file = event.target.files[0];
@@ -382,8 +378,8 @@ export default Vue.extend({
       if (this.thumbnail != null) {
         data.append("file", this.thumbnail);
       }
-      if (this.thumbnailPreview == null) {
-        data.append("removeFile", true);
+      if (this.thumbnailPreview == "") {
+        data.append("removeFilePath", this.pathThumbnail);
       }
       data.append("content", this.content);
       // FIXME: remove summary property after summary get handle in backend
