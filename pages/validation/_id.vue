@@ -84,6 +84,24 @@ export default {
         }
       });
     });
+  },
+  methods: {
+    validation(event) {
+      const formData = new FormData(event.target);
+      let data = new FormData();
+      let validation = [];
+      for (var pair of formData.entries()) {
+        validation.push({ index: pair[0], value: pair[1] });
+      }
+      data.append("title", this.title);
+      data.append("validation", JSON.stringify(validation));
+      this.$axios
+        .post(`/article/validation/${this.$route.params.id}`, data)
+        .then(res => {
+          alert("Tahnkyou Bosque");
+          this.$router.push("/");
+        });
+    }
   }
 };
 </script>
