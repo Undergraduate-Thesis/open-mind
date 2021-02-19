@@ -64,12 +64,12 @@ const SplitIntoSentence = async content => {
           null &&
         element.substring(0, 1).match(pattern) != null
       ) {
-        arraySentences[arraySentences.length - 1] += element + ".";
+        arraySentences[arraySentences.length - 1] += "." + element;
       } else if (element != "") {
-        arraySentences.push(element + ".");
+        arraySentences.push(element);
       }
     } else {
-      arraySentences.push(element + ".");
+      arraySentences.push(element);
     }
   }
   return arraySentences;
