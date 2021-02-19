@@ -20,7 +20,6 @@
     "docxtemplater": "^3.19.9",
     "jspdf": "^2.2.0",
     "markdown-it": "^12.0.0",
-    "natural": "^2.1.5",
     "nuxt": "^2.14.0",
     "remove-markdown": "^0.3.0",
     "sastrawijs": "^1.0.3",
