@@ -70,7 +70,7 @@ export default {
   async mounted() {
     const article = await this.$axios.$get(`/article/${this.$route.params.id}`);
     this.title = article.title;
-    this.content = article.content.split(".");
+    this.content = this.SplitIntoSentence(article.content);
 
     const summary = article.summary.split(".");
 
@@ -86,6 +86,35 @@ export default {
     });
   },
   methods: {
+    SplitIntoSentence(content) {
+      const arraySentences = [];
+      const sentences = content.split(".");
+      sentences.forEach((element, i) => {
+        if (i != 0) {
+          element;
+        }
+      });
+      for (let i = 0; i < sentences.length; i++) {
+        const element = sentences[i];
+        if (i != 0) {
+          const beforeElement = sentences[i - 1];
+
+          const pattern = new RegExp("[0-9]", "g");
+          if (
+            beforeElement.substring(beforeElement.length - 1).match(pattern) !=
+              null &&
+            element.substring(0, 1).match(pattern) != null
+          ) {
+            arraySentences[arraySentences.length - 1] += "." + element;
+          } else if (element != "") {
+            arraySentences.push(element);
+          }
+        } else {
+          arraySentences.push(element);
+        }
+      }
+      return arraySentences;
+    },
     validation(event) {
       const formData = new FormData(event.target);
       let data = new FormData();
