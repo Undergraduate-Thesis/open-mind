@@ -1,4 +1,3 @@
-import * as natural from "natural";
 import { SVD } from "svd-js";
 
 /**
@@ -6,7 +5,7 @@ import { SVD } from "svd-js";
  */
 export default (context, inject) => {
   const getSummary = async content => {
-    const sentences = content.split(".");
+    const sentences = await SplitIntoSentence(content);
     const totalDocument = sentences.length;
 
     const frequencyMatrix = await create_Frequency_Matrix(sentences);
@@ -46,25 +45,63 @@ export default (context, inject) => {
 /**
  * Local Function
  */
+const SplitIntoSentence = async content => {
+  const arraySentences = [];
+  const sentences = content.split(".");
+  sentences.forEach((element, i) => {
+    if (i != 0) {
+      element;
+    }
+  });
+  for (let i = 0; i < sentences.length; i++) {
+    const element = sentences[i];
+    if (i != 0) {
+      const beforeElement = sentences[i - 1];
+
+      const pattern = new RegExp("[0-9]", "g");
+      if (
+        beforeElement.substring(beforeElement.length - 1).match(pattern) !=
+          null &&
+        element.substring(0, 1).match(pattern) != null
+      ) {
+        arraySentences[arraySentences.length - 1] += element + ".";
+      } else if (element != "") {
+        arraySentences.push(element + ".");
+      }
+    } else {
+      arraySentences.push(element + ".");
+    }
+  }
+  return arraySentences;
+};
 const create_Frequency_Matrix = async sentences => {
+  var sastrawi = require("sastrawijs");
+
+  var stemmer = new sastrawi.Stemmer();
+  var tokenizer = new sastrawi.Tokenizer();
+
   let frequencyMatrix = [];
 
-  //tokenize and stemming all sentence
-  natural.StemmerId.attach();
-  natural.LancasterStemmer.attach();
-  let sentencesTokenizeAndStem = [];
   for await (const sentence of sentences) {
+    var stemmed = [];
+    var words = tokenizer.tokenize(sentence);
+    const sw = require("stopword");
+    words.forEach(word => {
+      stemmed.push(stemmer.stem(word));
+    });
+
+    const stopword = sw.removeStopwords(stemmed, sw.id);
+
     let freq_table = {};
-    sentencesTokenizeAndStem = sentence.tokenizeAndStem();
-    for await (const word of sentencesTokenizeAndStem) {
-      //   alert(`word : ${word}, sentence : ${sentencesTokenizeAndStem} `);
+
+    stopword.forEach(word => {
       if (Object.prototype.hasOwnProperty.call(freq_table, word) == true) {
         freq_table[word] += 1;
       } else {
         freq_table[word] = 1;
       }
-    }
-    frequencyMatrix[sentence.substring(1, 15)] = freq_table;
+      frequencyMatrix[sentence.substring(1, 15)] = freq_table;
+    });
   }
   return frequencyMatrix;
 };
