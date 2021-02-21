@@ -75,16 +75,17 @@ const SplitIntoSentence = async content => {
   return arraySentences;
 };
 const create_Frequency_Matrix = async sentences => {
-  var sastrawi = require("sastrawijs");
+  const sastrawi = require("sastrawijs");
 
-  var stemmer = new sastrawi.Stemmer();
-  var tokenizer = new sastrawi.Tokenizer();
+  const stemmer = new sastrawi.Stemmer();
+  const tokenizer = new sastrawi.Tokenizer();
 
   let frequencyMatrix = [];
 
   for await (const sentence of sentences) {
-    var stemmed = [];
-    var words = tokenizer.tokenize(sentence);
+    let stemmed = [];
+    const words = tokenizer.tokenize(sentence);
+
     const sw = require("stopword");
     words.forEach(word => {
       stemmed.push(stemmer.stem(word));
