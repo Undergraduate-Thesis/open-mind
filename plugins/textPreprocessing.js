@@ -23,7 +23,7 @@ export default (context, inject) => {
       sentences,
       v,
       q,
-      Math.ceil(sentences.length * 0.5)
+      Math.ceil(sentences.length * 0.6)
     );
 
     /* Metode lain */
