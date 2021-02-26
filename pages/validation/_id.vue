@@ -72,7 +72,8 @@ export default {
     this.title = article.title;
     this.content = this.SplitIntoSentence(article.content);
 
-    const summary = article.summary.split(".");
+    const summary = this.SplitIntoSentence(article.summary);
+    console.log(summary);
 
     this.content.forEach((contentSentence, i) => {
       const sentenceWIthoutSpace = contentSentence.replace(" ", "");
