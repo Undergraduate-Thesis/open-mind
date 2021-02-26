@@ -367,6 +367,7 @@ export default {
           comment: this.comment
         })
         .then(res => {
+          console.log(res);
           this.comments.push(res);
         });
     },
