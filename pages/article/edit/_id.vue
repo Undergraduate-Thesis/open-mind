@@ -285,10 +285,6 @@ export default Vue.extend({
 
       this.title = article.title;
       this.content = article.content;
-      this.thumbnail = {
-        name: article.thumbnail.path.replace("victor/article/", "")
-      };
-      this.pathThumbnail = article.thumbnail.path;
 
       // Get Tags
       const tags = await this.$axios.$get(`/tag/${this.$route.params.id}`);
@@ -302,9 +298,15 @@ export default Vue.extend({
 
       // Get Thumbnail
       if (article.thumbnail != null) {
+        this.thumbnail = {
+          name: article.thumbnail.path.replace("victor/article/", "")
+        };
+        this.pathThumbnail = article.thumbnail.path;
         this.thumbnailPreview = article.thumbnail.link;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error.message);
+    }
   },
   methods: {
     triggerButtonFile() {
@@ -393,7 +395,7 @@ export default Vue.extend({
         .put(`/article/${this.$route.params.id}`, data)
         .then(res => {
           if (res.status == 200) {
-            this.$router.push({ path: `/article/${this.$route.params.id}` });
+            // this.$router.push({ path: `/article/${this.$route.params.id}` });
           }
         })
         .catch(err => {
