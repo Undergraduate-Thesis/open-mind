@@ -1,5 +1,6 @@
 <template>
   <div>
+    <alert v-if="showAlert" @closeAlert="showAlert = false"></alert>
     <div
       id="header"
       class="flex items-center justify-between h-16 bg-gray-800 pl-4 pr-4 lg:pl-8 lg:pr-32"
@@ -50,7 +51,6 @@
         </button>
       </div>
     </div>
-    <alert v-if="showAlert" @closeAlert="showAlert = false"></alert>
     <!-- EDIT MODE -->
     <div v-if="preview == false" class="lg:flex lg:flex-wrap mt-2">
       <div class="lg:w-3/6 mx-12 mt-6 lg:ml-32 lg:mr-32 lg:mt-12">
