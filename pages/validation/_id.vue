@@ -1,5 +1,52 @@
 <template>
   <div id="validation">
+    <!-- Authorization -->
+    <div
+      v-if="!authorized"
+      class="absolute w-screen min-h-screen bg-black bg-opacity-50 flex items-center justify-center px-5 py-5"
+    >
+      <div
+        class="fixed w-full rounded-lg bg-white shadow-lg text-gray-800"
+        style="max-width: 500px"
+      >
+        <!-- HEADER -->
+        <div
+          class="w-full bg-gray-800 rounded-t-lg text-xl py-2 font-bold text-white text-center"
+        >
+          Authorization
+        </div>
+        <div class="mx-auto px-5 pt-5 pb-10">
+          <div class="mb-2">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              aria-label="Password"
+              aria-invalid="true"
+              aria-describedby="errorMessage"
+              aria-required="true"
+              required
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5"
+              placeholder="Password"
+              v-model="password"
+            />
+          </div>
+          <div v-if="errorMessage != ''" class="px-2 py-2 text-red-500">
+            <p class="errorMessage">{{ errorMessage }}</p>
+          </div>
+          <div class="flex justify-center">
+            <button
+              @click="authorization"
+              class="justify-center px-6 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
     <form id="myForm" @submit.prevent="validation($event)">
       <table class="table-fixed">
         <thead>
@@ -59,12 +106,17 @@
   </div>
 </template>
 <script>
+import Alert from "@/components/Article/alert";
 export default {
+  components: { Alert },
   data() {
     return {
       title: "",
       content: [],
-      summary: []
+      summary: [],
+      password: "",
+      authorized: false,
+      errorMessage: ""
     };
   },
   async mounted() {
@@ -87,6 +139,21 @@ export default {
     });
   },
   methods: {
+    authorization() {
+      let data = new FormData();
+      data.append("articleId", this.$route.params.id);
+      data.append("userId", JSON.parse(localStorage.getItem("user")).id);
+      data.append("password", this.password);
+
+      this.$axios
+        .post(`/article/validation/authorization`, data)
+        .then(res => {
+          this.authorized = true;
+        })
+        .catch(err => {
+          this.errorMessage = err.response.data;
+        });
+    },
     SplitIntoSentence(content) {
       const arraySentences = [];
       const sentences = content.split(".");
