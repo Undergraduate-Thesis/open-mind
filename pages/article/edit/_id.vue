@@ -386,9 +386,11 @@ export default Vue.extend({
       data.append("content", this.content);
       // FIXME: remove summary property after summary get handle in backend
       data.append("summary", summary);
-      tags.forEach(tag => {
-        data.append("tags[]", tag);
-      });
+      if (tags.length >= 1 && tags[0] != "") {
+        tags.forEach(tag => {
+          data.append("tags[]", tag);
+        });
+      }
       data.append("author", user.id);
 
       this.$axios
