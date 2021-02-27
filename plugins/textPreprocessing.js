@@ -19,11 +19,17 @@ export default (context, inject) => {
     const tfIdfMatrix = await create_TF_IDF_Matrix(tfMatrix, idfMatrix);
 
     const { u, v, q } = await getSVD(tfIdfMatrix);
+
+    const numberOfSentenceSummary =
+      totalDocument < 4
+        ? Math.ceil(sentences.length * 0.6)
+        : Math.floor(sentences.length * 0.6);
+
     const getSummary = await crossMethod(
       sentences,
       v,
       q,
-      Math.floor(sentences.length * 0.6)
+      numberOfSentenceSummary
     );
 
     /* Metode lain */
