@@ -99,7 +99,7 @@
         <button
           class="text-white text-center bg-blue-700 w-1/2 py-2 my-4 text-sm font-medium text-left bg-transparent rounded-md inline focus:outline-none"
         >
-          Submit Bosque
+          Submit Validation
         </button>
       </div>
     </form>
@@ -195,7 +195,7 @@ export default {
       this.$axios
         .post(`/article/validation/${this.$route.params.id}`, data)
         .then(res => {
-          alert("Tahnkyou Bosque");
+          alert("Thankyou for your validation");
           this.$router.push("/");
         });
     }
