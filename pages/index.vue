@@ -129,6 +129,7 @@ export default Vue.extend({
       currentTime: "",
       articles: [],
       tags: [],
+      popularTags: [],
       textSearch: ""
     };
   },
@@ -142,6 +143,11 @@ export default Vue.extend({
     async getTags() {
       try {
         this.tags = await this.$axios.$get("/tag");
+        this.popularTags = [...this.tags];
+        this.popularTags = this.popularTags.sort((a, b) =>
+          a.total_used > b.total_used ? -1 : 1
+        );
+        this.popularTags.length = 10;
       } catch (error) {
         console.log("error", error);
       }
