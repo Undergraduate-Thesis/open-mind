@@ -115,7 +115,7 @@ export default {
       content: [],
       summary: [],
       password: "",
-      authorized: false,
+      authorized: true,
       errorMessage: ""
     };
   },
