@@ -10,19 +10,22 @@
       <div
         class="w-full bg-gray-800 rounded-t-lg text-xl py-2 font-bold text-white text-center"
       >
-        Caution
+        Your article cannot be published.
       </div>
-      <div class="mx-auto px-5 pt-5 pb-10">
-        <div class="w-full mb-10">
-          <p class="text-sm text-gray-600 px-5 mb-2">
-            Artikel anda tidak dapat di publish. Pastikan anda telah memenuhi
-            syarat berikut sebelum melakukan publikasi :
+      <div class="mx-auto px-5 pt-5 pb-4">
+        <div class="w-full mb-4">
+          <p class="font-bold text-gray-600 px-5">
+            The system found an error:
+            <span class="text-red-600" v-if="title == ''"
+              >Title cannot be empty!</span
+            >
+            <span class="text-red-600" v-else-if="content == ''"
+              >Content cannot be empty!</span
+            >
+            <span class="text-red-600" v-else-if="tagNotExists.length != 0">
+              The tags used must be contained in the content of the article.
+            </span>
           </p>
-          <ul class="text-sm text-teal-500">
-            <li>Title tidak boleh kosong</li>
-            <li>Content tidak boleh kosong</li>
-            <li>Tag yang digunakan harus terkandung dalam Content artikel.</li>
-          </ul>
         </div>
         <!-- <div class="flex"> -->
         <div class="flex justify-center">
@@ -40,3 +43,8 @@
 <style>
 @import url(https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.min.css);
 </style>
+<script>
+export default {
+  props: ["title", "content", "tagNotExists"]
+};
+</script>
