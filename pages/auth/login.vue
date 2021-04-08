@@ -32,6 +32,7 @@
           class="w-full max-w-xl mt-8 bg-white rounded-lg shadow-md p-6"
           action="#"
           method="POST"
+          @submit.prevent="Sigin()"
         >
           <input type="hidden" name="remember" value="true" />
           <div class="rounded-md shadow-sm">
@@ -83,7 +84,6 @@
             <button
               aria-label="Sigin"
               class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-              @click.prevent="Sigin()"
             >
               <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                 <svg
