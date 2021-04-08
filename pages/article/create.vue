@@ -1,6 +1,12 @@
 <template>
   <div>
-    <alert v-if="showAlert" @closeAlert="showAlert = false"></alert>
+    <alert
+      v-if="showAlert"
+      @closeAlert="showAlert = false"
+      :tagNotExists="tagNotExists"
+      :content="content"
+      :title="title"
+    ></alert>
     <div
       id="header"
       class="flex items-center justify-between h-16 bg-gray-800 pl-4 pr-4 lg:pl-8 lg:pr-32"
@@ -281,6 +287,7 @@ export default Vue.extend({
       test: true,
       contentPreview: null,
       tagsPreview: [],
+      tagNotExists: [],
 
       // Change Color Focus
       colorImageIcon: "rgba(0,0,0,1)",
@@ -370,19 +377,10 @@ export default Vue.extend({
       const user = JSON.parse(localStorage.getItem("user"));
       const tags = this.tag.split(" ");
 
-      // FIXME: remove summary variable after summary get handle in backend
-      const summary = await this.$summary(this.content);
-
       let data = new FormData();
 
-      data.append("title", this.title);
-      data.append("file", this.thumbnail);
-      data.append("content", this.content);
-      // FIXME: remove summary property after summary get handle in backend
-      data.append("summary", summary);
-
       // Validation Tag
-      const tagNotExists = [];
+      // const tagNotExists = [];
       const contentWithoutSpace = this.content.replace(" ", "");
       tags.forEach(tag => {
         let baseTag = tag.replace("#", "");
@@ -394,28 +392,41 @@ export default Vue.extend({
 
           const filter = contentWithoutSpace.match(pattern);
           if (filter == null) {
-            tagNotExists.push(tag);
+            this.tagNotExists.push(tag);
           }
         });
         data.append("tags[]", tag);
       });
 
-      data.append("author", user.id);
-
-      if (tagNotExists.length != 0 || this.title == "" || this.content == "") {
+      if (
+        this.tagNotExists.length != 0 ||
+        this.title == "" ||
+        this.content == ""
+      ) {
         this.showAlert = true;
       } else {
-        this.$axios
-          .post("/article", data)
-          .then(res => {
-            if (res.status == 201) {
-              localStorage.removeItem("ongoing-article");
-              this.$router.push({ path: "/" });
-            }
-          })
-          .catch(err => {
-            console.log(err.response.data);
-          });
+        // FIXME: remove summary variable after summary get handle in backend
+        const summary = await this.$summary(this.content);
+
+        data.append("title", this.title);
+        data.append("file", this.thumbnail);
+        data.append("content", this.content);
+        // FIXME: remove summary property after summary get handle in backend
+        data.append("summary", summary);
+
+        data.append("author", user.id);
+
+        // this.$axios
+        //   .post("/article", data)
+        //   .then(res => {
+        //     if (res.status == 201) {
+        //       localStorage.removeItem("ongoing-article");
+        //       this.$router.push({ path: "/" });
+        //     }
+        //   })
+        //   .catch(err => {
+        //     console.log(err.response.data);
+        //   });
       }
     }
   }
