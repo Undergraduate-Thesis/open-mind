@@ -1,10 +1,8 @@
 <template>
   <div class="register">
-    <!--
-  Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
-  Read the documentation to get started: https://tailwindui.com/documentation
--->
+    <!-- Signup form -->
     <div
+      v-if="!dialogBoxActivation"
       class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
     >
       <div class="max-w-md w-full">
@@ -70,36 +68,6 @@
                   v-model="name"
                 />
               </div>
-              <!-- <div class="mb-6">
-                <label
-                  class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                  for="gender"
-                  >Gender</label
-                >
-                <div class="relative">
-                  <select
-                    v-model="gender"
-                    class="block appearance-none w-full border border-gray-300 px-4 py-2 pr-8 rounded focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5"
-                  >
-                    <option disabled value="">Please select one</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                  <div
-                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500"
-                  >
-                    <svg
-                      class="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div> -->
               <div class="mb-6">
                 <label
                   class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -155,10 +123,6 @@
                 />
               </div>
             </div>
-
-            <!-- <div v-if="errorMessage != ''" class="px-2 py-2 text-red-500">
-            <p class="errorMessage">{{ errorMessage }}</p>
-          </div> -->
             <div class="flex justify-start mt-3 ml-4 p-1">
               <ul>
                 <li class="flex items-center py-1">
@@ -295,6 +259,25 @@
         </div>
       </div>
     </div>
+    <!-- Send Email Verification -->
+    <div v-else class="max-w-full mx-4 mt-4 border border-black rounded-md p-0">
+      <div class="bg-black rounded-t-md text-white m-0">
+        <h2 class="text-lg p-2">Account Activation</h2>
+      </div>
+      <div class="bg-gray-200 p-3 lg:flex lg:justify-between text-justify">
+        <p class="self-center">
+          We have sent a message to your email for account activation. Please
+          check your email and verify your registration by pressing the button
+          in the message.
+        </p>
+        <button
+          class="bg-black p-2 rounded text-white font-bold"
+          @click="goToGmail"
+        >
+          Go To Email
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -308,7 +291,8 @@ export default Vue.extend({
       password: "",
       passwordConfirm: "",
       //error checking
-      errorMessage: null
+      errorMessage: null,
+      dialogBoxActivation: false
     };
   },
   computed: {
@@ -323,6 +307,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    goToGmail() {
+      window.location.href = "https://mail.google.com/";
+    },
     async signup() {
       try {
         this.errorMessage = null;
@@ -333,14 +320,20 @@ export default Vue.extend({
             password: this.password
           });
           if (register) {
-            localStorage.setItem("access_token", register.data.token);
-            localStorage.setItem("user", JSON.stringify(register.data.user));
-            this.$axios.setToken(register.data.token, "Bearer");
-            this.$router.push({ path: "/" });
+            console.log(register.data.message);
+            if (register.data.message == "success") {
+              this.dialogBoxActivation = true;
+              console.log(this.dialogBoxActivation);
+            }
+            // localStorage.setItem("access_token", register.data.token);
+            // localStorage.setItem("user", JSON.stringify(register.data.user));
+            // this.$axios.setToken(register.data.token, "Bearer");
+            // this.$router.push({ path: "/" });
           }
         } else {
         }
       } catch (error) {
+        console.log(error);
         window.scroll({
           top: 0,
           left: 0,
