@@ -1,9 +1,52 @@
 <template>
   <div class="login">
-    <!--
-  Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
-  Read the documentation to get started: https://tailwindui.com/documentation
--->
+    <!-- Alert Activation Successfull -->
+    <div
+      class="m-2 p-3 relative flex flex-col sm:flex-row sm:items-center bg-gray-200 border-2 border-black rounded-md shadow-md"
+      v-if="showAlert"
+    >
+      <div class="text-green-500">
+        <svg
+          class="w-6 sm:w-5 h-6 sm:h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+      </div>
+      <div class="text-sm font-medium ml-3">Activation Successfull</div>
+      <div class="text-sm tracking-wide text-gray-500 mt-4 sm:mt-0 sm:ml-4">
+        Your account has activated. Please sigin to get more feature!
+      </div>
+      <div
+        class="absolute sm:relative sm:top-auto sm:right-auto ml-auto right-4 top-4 text-gray-600 hover:text-black cursor-pointer"
+        @click="showAlert = false"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
     <div
       class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
     >
@@ -114,8 +157,15 @@ export default Vue.extend({
     return {
       email: "",
       password: "",
-      errorMessage: ""
+      errorMessage: "",
+      showAlert: false
     };
+  },
+  created() {
+    if (this.$route.query.activateAccount) {
+      this.showAlert = true;
+      this.$router.replace("/auth/login");
+    }
   },
   methods: {
     Sigin() {
