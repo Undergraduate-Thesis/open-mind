@@ -1,11 +1,58 @@
 <template>
   <div class="login">
+    <!-- Dialog Box Success Ressend Email -->
+    <div
+      v-show="dialogBoxResend"
+      class="absolute w-screen min-h-screen bg-black bg-opacity-50 z-40 flex items-center justify-center px-5 py-5"
+      @click="
+        dialogBoxResend = false;
+        showAlert = false;
+      "
+    >
+      <div
+        class="w-2/3 lg:w-1/4 mx-auto rounded-lg bg-white shadow-lg px-5 pt-5 pb-10 text-gray-800"
+      >
+        <div class="flex justify-center text-center text-green-500">
+          <div class="flex-col">
+            <svg
+              class="w-20 h-20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <p class="font-bold">SENT</p>
+          </div>
+        </div>
+        <div class="w-full">
+          <p class="text-sm text-gray-600 text-center px-5 mb-5">
+            Please check your email
+          </p>
+          <div class="flex justify-center">
+            <button
+              class="px-6 py-2 text-xs font-medium leading-6 text-center text-green-500 uppercase transition bg-transparent border-2 border-green-500 rounded ripple hover:bg-green-100 focus:outline-none"
+              @click="goToGmail"
+            >
+              Go To Email
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Alert Activation Successfull -->
     <div
       class="m-2 p-3 relative flex flex-col sm:flex-row sm:items-center bg-gray-200 border-2 border-black rounded-md shadow-md"
       v-if="showAlert"
     >
-      <div class="text-green-500">
+      <div v-if="alertTitle == 'Activation Successfull'" class="text-green-500">
         <svg
           class="w-6 sm:w-5 h-6 sm:h-5"
           fill="none"
@@ -21,28 +68,59 @@
           ></path>
         </svg>
       </div>
-      <div class="text-sm font-medium ml-3">Activation Successfull</div>
-      <div class="text-sm tracking-wide text-gray-500 mt-4 sm:mt-0 sm:ml-4">
-        Your account has activated. Please sigin to get more feature!
+      <div v-else>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path
+            d="M12.866 3l9.526 16.5a1 1 0 0 1-.866 1.5H2.474a1 1 0 0 1-.866-1.5L11.134 3a1 1 0 0 1 1.732 0zm-8.66 16h15.588L12 5.5 4.206 19zM11 16h2v2h-2v-2zm0-7h2v5h-2V9z"
+            fill="rgba(248,221,0,1)"
+          />
+        </svg>
       </div>
+      <div class="text-sm font-medium ml-3">{{ alertTitle }}</div>
+      <div class="text-sm tracking-wide text-gray-500 mt-4 sm:mt-0 sm:ml-4">
+        {{ alertMessage }}
+      </div>
+
       <div
         class="absolute sm:relative sm:top-auto sm:right-auto ml-auto right-4 top-4 text-gray-600 hover:text-black cursor-pointer"
-        @click="showAlert = false"
       >
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          ></path>
-        </svg>
+        <div class="flex flex-row">
+          <button
+            class="bg-black p-2 mr-2 rounded text-white text-sm font-bold"
+            v-if="alertTitle == 'Need Verification'"
+            @click="resendEmail"
+          >
+            Resend Email
+          </button>
+          <button
+            class="bg-black p-2 mr-4 rounded text-white text-sm font-bold"
+            v-if="alertTitle == 'Need Verification'"
+            @click="goToGmail"
+          >
+            Go To Email
+          </button>
+          <svg
+            @click="showAlert = false"
+            class="w-4 h-4 self-center"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -158,16 +236,37 @@ export default Vue.extend({
       email: "",
       password: "",
       errorMessage: "",
-      showAlert: false
+      showAlert: false,
+      alertTitle: "",
+      alertMessage: "",
+      dialogBoxResend: false
     };
   },
   created() {
     if (this.$route.query.activateAccount) {
       this.showAlert = true;
+      this.alertTitle = "Activation Successfull";
+      this.alertMessage =
+        "Your account has activated. Please sigin to get more feature!";
       this.$router.replace("/auth/login");
     }
   },
   methods: {
+    resendEmail() {
+      this.$axios
+        .post("/auth/resendEmailVerification", {
+          email: this.email
+        })
+        .then(res => {
+          this.dialogBoxResend = true;
+        })
+        .catch(err => {
+          console.log(err.response.data);
+        });
+    },
+    goToGmail() {
+      window.location.href = "https://mail.google.com/";
+    },
     Sigin() {
       this.errorMessage = "";
       this.$axios
@@ -184,7 +283,14 @@ export default Vue.extend({
           this.$router.push({ path: "/" });
         })
         .catch(err => {
-          this.errorMessage = err.response.data;
+          if (err.response.data == "account has not been verified") {
+            this.showAlert = true;
+            this.alertTitle = "Need Verification";
+            this.alertMessage =
+              "The account is not yet active, please check your email to active your account.";
+          } else {
+            this.errorMessage = err.response.data;
+          }
         });
     }
   }
