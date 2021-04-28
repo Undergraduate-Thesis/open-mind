@@ -416,17 +416,17 @@ export default Vue.extend({
 
         data.append("author", user.id);
 
-        // this.$axios
-        //   .post("/article", data)
-        //   .then(res => {
-        //     if (res.status == 201) {
-        //       localStorage.removeItem("ongoing-article");
-        //       this.$router.push({ path: "/" });
-        //     }
-        //   })
-        //   .catch(err => {
-        //     console.log(err.response.data);
-        //   });
+        this.$axios
+          .post("/article", data)
+          .then(res => {
+            if (res.status == 201) {
+              localStorage.removeItem("ongoing-article");
+              this.$router.push({ path: "/" });
+            }
+          })
+          .catch(err => {
+            console.log(err.response.data);
+          });
       }
     }
   }
