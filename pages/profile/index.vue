@@ -36,26 +36,32 @@
         {{ user.name }}
       </p>
     </div>
-    <div class="profile__content mx-64 px-12 py-4 bg-gray-200 rounded-md">
+    <div
+      class="profile__content mx-64 px-12 py-4 bg-gray-200 bg-opacity-50 rounded-md"
+    >
       <div class="button__group justify-center flex">
-        <button
-          @click="
-            getArticle();
-            isBookmarkArticle = false;
-          "
-          class="border bg-gray-900 text-white -white font-normal py-2 px-4 rounded"
-        >
-          Your Article
-        </button>
-        <button
-          @click="
-            getBookmark();
-            isBookmarkArticle = true;
-          "
-          class="border bg-gray-900 text-white -white font-normal py-2 px-4 rounded"
-        >
-          Article Saved
-        </button>
+        <div class="flex cursor-pointer">
+          <button
+            @click="
+              getArticle();
+              toogleArticle = true;
+            "
+            class="py-2 px-6 bg-white focus:outline-none shadow-md"
+            :class="[toogleArticle ? focusTab : unfocusTab]"
+          >
+            Your Article
+          </button>
+          <button
+            @click="
+              getBookmark();
+              toogleArticle = false;
+            "
+            class="py-2 px-6 bg-white focus:outline-none shadow-lg"
+            :class="[!toogleArticle ? focusTab : unfocusTab]"
+          >
+            Article Saved
+          </button>
+        </div>
       </div>
 
       <!-- CONTENT -->
@@ -99,7 +105,7 @@
               Detail
             </nuxt-link>
             <nuxt-link
-              v-if="isBookmarkArticle == false"
+              v-if="toogleArticle == true"
               @click.native="$event.stopImmediatePropagation()"
               :to="`/article/edit/${article._id}`"
               class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
@@ -109,7 +115,7 @@
 
             <!-- Delete -->
             <button
-              v-if="isBookmarkArticle == false"
+              v-if="toogleArticle == true"
               @click="
                 dialogBoxDeleteArticle = true;
                 currentIndexDeleteArticle = index;
@@ -128,7 +134,7 @@
               to="/404"
               class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
             >
-              Delete
+              Remove
             </button>
           </div>
         </div>
@@ -160,11 +166,13 @@ export default {
     return {
       user: JSON.parse(localStorage.getItem("user")) || null,
       articles: [],
-      isBookmarkArticle: false,
       dialogBoxDeleteArticle: false,
       currentIndexDeleteArticle: null,
       dialogBoxRemoveBookmark: false,
-      currentIndexRemoveBookmark: null
+      currentIndexRemoveBookmark: null,
+      toogleArticle: true,
+      focusTab: "border-b-2 border-black",
+      unfocusTab: "text-gray-700 bg-gray-300 hover:bg-gray-200"
     };
   },
   async mounted() {
