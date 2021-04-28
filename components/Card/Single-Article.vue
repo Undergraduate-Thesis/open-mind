@@ -22,11 +22,12 @@
           >
             {{ article.title }}
           </h2>
+          <p class="text-sm text-gray-500">{{ this.created_at }}</p>
         </nuxt-link>
-        <p class="mt-4 text-gray-600 spoiler--3line">
+        <p class="mt-6 text-gray-600 spoiler--3line">
           {{ article.content }}
         </p>
-        <div class="flex items-center justify-between mt-8">
+        <div class="flex items-center justify-between mt-10">
           <div id="like">
             <p class="inline-block text-gray-600 font-semibold">
               {{ articleLikes.length }}
@@ -102,13 +103,24 @@ export default Vue.extend({
   },
   data() {
     return {
+      created_at: null as any,
       spoiler: "",
       articleLikes: [],
       articleComment: []
     };
   },
   async mounted() {
+    const date = new Date((this.article as any).created_at);
+    this.created_at = `${date.getDate()} ${date.toLocaleString("default", {
+      month: "short"
+    })} ${date.getFullYear()} ${date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    })}`;
+    console.log(this.created_at);
+
     const sentences = (this.article as any).content.match(/[^\.!\?]+[\.!\?]+/g);
+    console.log(this.article);
     if (sentences != null) {
       sentences.forEach((element: String) => {
         this.spoiler += element;
