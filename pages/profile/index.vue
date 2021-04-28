@@ -1,5 +1,20 @@
 <template>
   <div>
+    <!-- DELETE ARTICLE -->
+    <delete-article
+      v-show="dialogBoxDeleteArticle"
+      @closeDialogBox="dialogBoxDeleteArticle = false"
+      @deleteArticle="deleteArticle"
+    ></delete-article>
+
+    <!-- REMOVE BOOKMARK -->
+    <remove-bookmark
+      v-show="dialogBoxRemoveBookmark"
+      @closeDialogBox="dialogBoxRemoveBookmark = false"
+      @removeBookmark="removeBookmark"
+    ></remove-bookmark>
+
+    <!-- PROFILE -->
     <div class="profile__header mt-5 mb-5">
       <div class="block justify-center flex">
         <img
@@ -95,7 +110,10 @@
             <!-- Delete -->
             <button
               v-if="isBookmarkArticle == false"
-              @click="deleteArticle(index)"
+              @click="
+                dialogBoxDeleteArticle = true;
+                currentIndexDeleteArticle = index;
+              "
               to="/404"
               class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
             >
@@ -103,7 +121,10 @@
             </button>
             <button
               v-else
-              @click="deleteBookmark(index)"
+              @click="
+                dialogBoxRemoveBookmark = true;
+                currentIndexRemoveBookmark = index;
+              "
               to="/404"
               class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
             >
@@ -130,13 +151,20 @@
 }
 </style>
 <script>
+import deleteArticle from "~/components/Dialogbox/deleteArticle.vue";
+import removeBookmark from "~/components/Dialogbox/removeBookmark.vue";
 export default {
   layout: "container",
+  components: { deleteArticle, removeBookmark },
   data() {
     return {
       user: JSON.parse(localStorage.getItem("user")) || null,
       articles: [],
-      isBookmarkArticle: false
+      isBookmarkArticle: false,
+      dialogBoxDeleteArticle: false,
+      currentIndexDeleteArticle: null,
+      dialogBoxRemoveBookmark: false,
+      currentIndexRemoveBookmark: null
     };
   },
   async mounted() {
@@ -164,14 +192,23 @@ export default {
         this.articles.push(article);
       });
     },
-    deleteArticle(indexArticle) {
-      const removedArticle = this.articles.splice(indexArticle, 1);
-      console.log(removedArticle[0]);
-      this.$axios.$delete(`/article/${removedArticle[0]._id}`);
+    async deleteArticle() {
+      const removedArticle = this.articles.splice(
+        this.currentIndexDeleteArticle,
+        1
+      );
+      await this.$axios.$delete(`/article/${removedArticle[0]._id}`);
+      this.dialogBoxDeleteArticle = false;
     },
-    deleteBookmark(indexBookmark) {
-      const removeBookmark = this.articles.splice(indexBookmark, 1);
-      this.$axios.$delete(`/user/bookmark/${removeBookmark[0].bookmark_id}`);
+    async removeBookmark() {
+      const removeBookmark = this.articles.splice(
+        this.currentIndexRemoveBookmark,
+        1
+      );
+      await this.$axios.$delete(
+        `/user/bookmark/${removeBookmark[0].bookmark_id}`
+      );
+      this.dialogBoxRemoveBookmark = false;
     }
   }
 };
