@@ -1,5 +1,12 @@
 <template>
   <div>
+    <!-- DELETE ARTICLE -->
+    <edit-article
+      v-show="dialogBoxEditArticle"
+      @closeDialogBox="dialogBoxEditArticle = false"
+      @editArticle="publish()"
+    ></edit-article>
+
     <div
       id="header"
       class="flex items-center justify-between h-16 bg-gray-800 px-32"
@@ -26,7 +33,7 @@
           Edit
         </button>
         <button
-          @click="publish()"
+          @click="dialogBoxEditArticle = true"
           class="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
         >
           Publish
@@ -244,10 +251,11 @@
 <script>
 import Vue from "vue";
 import ResizableTextarea from "@/plugins/ResizableTextarea.js";
+import editArticle from "~/components/Dialogbox/editArticle.vue";
 import docx4js from "docx4js";
 import Docxtemplater from "docxtemplater";
 export default Vue.extend({
-  components: { ResizableTextarea },
+  components: { ResizableTextarea, editArticle },
   data() {
     return {
       user: JSON.parse(localStorage.getItem("user")),
@@ -265,7 +273,9 @@ export default Vue.extend({
       // Change Color Focus
       colorImageIcon: "rgba(0,0,0,1)",
       colorCloseIcon: "rgba(0,0,0,1)",
-      colorImageChangeIcon: "rgba(0,0,0,1)"
+      colorImageChangeIcon: "rgba(0,0,0,1)",
+
+      dialogBoxEditArticle: false
     };
   },
   directives: {
@@ -397,7 +407,7 @@ export default Vue.extend({
         .put(`/article/${this.$route.params.id}`, data)
         .then(res => {
           if (res.status == 200) {
-            // this.$router.push({ path: `/article/${this.$route.params.id}` });
+            this.$router.push({ path: `/article/${this.$route.params.id}` });
           }
         })
         .catch(err => {
