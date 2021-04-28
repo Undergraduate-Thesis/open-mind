@@ -114,7 +114,7 @@
             <img
               v-else
               class="object-cover w-full h-64 rounded-t-lg"
-              src="https://images.unsplash.com/photo-1587814969489-e5df12e17391?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NHx8c29jaWFsJTIwZGlzdGFuY2UlMjBhbmQlMjBzdGF5JTIwc2FmZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+              src="https://s3-id-jkt-1.kilatstorage.id/nanas-experience/victor/article/default_thumbnail.jpg"
               alt="article image"
             />
           </div>

@@ -12,7 +12,7 @@
           v-else
           class="h-64 bg-cover rounded-lg h-full cursor-pointer"
           @click="openArticle(article._id)"
-          style="background-image: url('https://images.unsplash.com/photo-1587814969489-e5df12e17391?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NHx8c29jaWFsJTIwZGlzdGFuY2UlMjBhbmQlMjBzdGF5JTIwc2FmZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"
+          style="background-image: url('https://s3-id-jkt-1.kilatstorage.id/nanas-experience/victor/article/default_thumbnail.jpg');"
         ></div>
       </div>
       <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl md:w-3/5 lg:w-3/5">
