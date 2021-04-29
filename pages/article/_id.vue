@@ -143,9 +143,14 @@
                 {{ article.title }}
               </h1>
             </div>
-            <div class="article__author mb-6">
+            <div class="article__author flex justify-between mb-6">
               <p class="text-lg">
                 {{ article.author }} ({{ article.created_at }})
+              </p>
+              <p
+                class="px-2 text-gray-500 border-2 border-solid border-gray-500 rounded-md"
+              >
+                {{ article.total_views }} Views
               </p>
             </div>
             <div class="article__content h-full text-xl" v-show="!summary">
