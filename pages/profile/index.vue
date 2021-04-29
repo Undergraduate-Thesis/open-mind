@@ -49,7 +49,7 @@
             class="py-2 px-6 bg-white focus:outline-none shadow-md"
             :class="[toogleArticle ? focusTab : unfocusTab]"
           >
-            Your Article
+            Your Article ({{ this.articles.length }})
           </button>
           <button
             @click="
@@ -59,83 +59,131 @@
             class="py-2 px-6 bg-white focus:outline-none shadow-lg"
             :class="[!toogleArticle ? focusTab : unfocusTab]"
           >
-            Article Saved
+            Article Saved ({{ this.bookmarks.length }})
           </button>
         </div>
       </div>
 
       <!-- CONTENT -->
-      <div
-        v-for="(article, index) in articles"
-        :key="index"
-        class="card my-3 lg:flex md:flex justify-center rounded-md bg-white"
-      >
-        <div class="lg:w-2/6 md:w-2/6">
-          <div
-            v-if="article.thumbnail != null"
-            class="h-64 bg-cover rounded-lg h-full cursor-pointer"
-            @click="openArticle(article._id)"
-            :style="{ backgroundImage: `url(${article.thumbnail.link})` }"
-          ></div>
-          <div
-            v-else
-            class="h-64 bg-cover rounded-lg h-full cursor-pointer"
-            @click="openArticle(article._id)"
-            style="background-image: url('https://images.unsplash.com/photo-1587814969489-e5df12e17391?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NHx8c29jaWFsJTIwZGlzdGFuY2UlMjBhbmQlMjBzdGF5JTIwc2FmZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"
-          ></div>
-        </div>
-        <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl lg:w-4/6 md:w-4/6">
-          <nuxt-link
-            @click.native="$event.stopImmediatePropagation()"
-            :to="`/article/${article._id}`"
-            ><h2 class="text-2xl text-gray-800 font-bold hover:text-blue-700">
-              {{ article.title }}
-            </h2>
-          </nuxt-link>
-          <p class="mt-5 text-gray-600 spoiler--3line">
-            {{ article.content }}
-          </p>
-          <div class="flex justify-between mt-8">
-            <!-- @click.native bertujuan untuk mematikan action @click pada div card diatas. @click.nativesama seperti onclick; event.stopPropagation di javascript -->
+      <!-- Article -->
+      <div v-if="toogleArticle == true">
+        <div
+          v-for="(article, index) in articles"
+          :key="index"
+          class="card my-3 lg:flex md:flex justify-center rounded-md bg-white"
+        >
+          <div class="lg:w-2/6 md:w-2/6">
+            <div
+              v-if="article.thumbnail != null"
+              class="h-64 bg-cover rounded-lg h-full cursor-pointer"
+              @click="openArticle(article._id)"
+              :style="{ backgroundImage: `url(${article.thumbnail.link})` }"
+            ></div>
+            <div
+              v-else
+              class="h-64 bg-cover bg-no-repeat bg-center rounded-lg h-full cursor-pointer"
+              @click="openArticle(article._id)"
+              style="background-image: url('https://s3-id-jkt-1.kilatstorage.id/nanas-experience/victor/article/default_thumbnail.jpg');"
+            ></div>
+          </div>
+          <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl lg:w-4/6 md:w-4/6">
             <nuxt-link
               @click.native="$event.stopImmediatePropagation()"
               :to="`/article/${article._id}`"
-              class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
-            >
-              Detail
+              ><h2 class="text-2xl text-gray-800 font-bold hover:text-blue-700">
+                {{ article.title }}
+              </h2>
             </nuxt-link>
-            <nuxt-link
-              v-if="toogleArticle == true"
-              @click.native="$event.stopImmediatePropagation()"
-              :to="`/article/edit/${article._id}`"
-              class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
-            >
-              Edit
-            </nuxt-link>
+            <p class="mt-5 text-gray-600 spoiler--3line">
+              {{ article.content }}
+            </p>
+            <div class="flex justify-between mt-8">
+              <!-- @click.native bertujuan untuk mematikan action @click pada div card diatas. @click.nativesama seperti onclick; event.stopPropagation di javascript -->
+              <nuxt-link
+                @click.native="$event.stopImmediatePropagation()"
+                :to="`/article/${article._id}`"
+                class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
+              >
+                Detail
+              </nuxt-link>
+              <nuxt-link
+                v-if="toogleArticle == true"
+                @click.native="$event.stopImmediatePropagation()"
+                :to="`/article/edit/${article._id}`"
+                class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
+              >
+                Edit
+              </nuxt-link>
 
-            <!-- Delete -->
-            <button
-              v-if="toogleArticle == true"
-              @click="
-                dialogBoxDeleteArticle = true;
-                currentIndexDeleteArticle = index;
-              "
-              to="/404"
-              class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
-            >
-              Delete
-            </button>
-            <button
+              <!-- Delete -->
+              <button
+                @click="
+                  dialogBoxDeleteArticle = true;
+                  currentIndexDeleteArticle = index;
+                "
+                to="/404"
+                class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bookmarks -->
+      <div v-else>
+        <div
+          v-for="(bookmark, index) in bookmarks"
+          :key="index"
+          class="card my-3 lg:flex md:flex justify-center rounded-md bg-white"
+        >
+          <div class="lg:w-2/6 md:w-2/6">
+            <div
+              v-if="bookmark.thumbnail != null"
+              class="h-64 bg-cover rounded-lg h-full cursor-pointer"
+              @click="openArticle(article._id)"
+              :style="{ backgroundImage: `url(${bookmark.thumbnail.link})` }"
+            ></div>
+            <div
               v-else
-              @click="
-                dialogBoxRemoveBookmark = true;
-                currentIndexRemoveBookmark = index;
-              "
-              to="/404"
-              class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
-            >
-              Remove
-            </button>
+              class="h-64 bg-cover bg-no-repeat bg-center rounded-lg h-full cursor-pointer"
+              @click="openArticle(bookmark._id)"
+              style="background-image: url('https://s3-id-jkt-1.kilatstorage.id/nanas-experience/victor/article/default_thumbnail.jpg');"
+            ></div>
+          </div>
+          <div class="pt-5 pb-6 px-6 max-w-xl lg:max-w-5xl lg:w-4/6 md:w-4/6">
+            <nuxt-link
+              @click.native="$event.stopImmediatePropagation()"
+              :to="`/article/${bookmark._id}`"
+              ><h2 class="text-2xl text-gray-800 font-bold hover:text-blue-700">
+                {{ bookmark.title }}
+              </h2>
+            </nuxt-link>
+            <p class="mt-5 text-gray-600 spoiler--3line">
+              {{ bookmark.content }}
+            </p>
+            <div class="flex justify-between mt-8">
+              <!-- @click.native bertujuan untuk mematikan action @click pada div card diatas. @click.nativesama seperti onclick; event.stopPropagation di javascript -->
+              <nuxt-link
+                @click.native="$event.stopImmediatePropagation()"
+                :to="`/article/${bookmark._id}`"
+                class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
+              >
+                Detail
+              </nuxt-link>
+
+              <!-- Remove -->
+              <button
+                @click="
+                  dialogBoxRemoveBookmark = true;
+                  currentIndexRemoveBookmark = index;
+                "
+                to="/404"
+                class="bg-gray-900 text-gray-100 px-5 py-3 font-semibold rounded"
+              >
+                Remove
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -166,6 +214,7 @@ export default {
     return {
       user: JSON.parse(localStorage.getItem("user")) || null,
       articles: [],
+      bookmarks: [],
       dialogBoxDeleteArticle: false,
       currentIndexDeleteArticle: null,
       dialogBoxRemoveBookmark: false,
@@ -177,6 +226,7 @@ export default {
   },
   async mounted() {
     this.getArticle();
+    this.getBookmark();
   },
   methods: {
     async getArticle() {
@@ -186,18 +236,28 @@ export default {
       );
     },
     async getBookmark() {
-      this.articles = [];
       const bookmarks = await this.$axios.$get(
         `/user/bookmark/${this.user.id}`
       );
 
-      bookmarks.forEach(async bookmark => {
-        let article = await this.$axios.$get(`/article/${bookmark.article_id}`);
+      const getArticles = new Promise(resolve => {
+        let articles = [];
+        bookmarks.forEach(async (bookmark, index) => {
+          let article = await this.$axios.$get(
+            `/article/${bookmark.article_id}`
+          );
 
-        //insert bookmark_id in object article
-        article.bookmark_id = bookmark._id;
+          //insert bookmark_id in object article
+          article.bookmark_id = bookmark._id;
 
-        this.articles.push(article);
+          articles.push(article);
+
+          if (index === bookmarks.length - 1) resolve(articles);
+        });
+      });
+
+      getArticles.then(articles => {
+        this.bookmarks = articles;
       });
     },
     async deleteArticle() {
