@@ -306,12 +306,12 @@ export default {
 
       let bottomPositionText = 1.2;
 
-      //Title
+      // Title
       const fontSizeTitle = 30;
       let oneLineHeight = fontSizeTitle / ptsPerInch;
 
       let textLines = doc
-        .setFont("helvetica")
+        .setFont("helvetica", "bold")
         .setFontSize(fontSizeTitle)
         .splitTextToSize(this.article.title, maxLineWidth);
 
@@ -319,12 +319,12 @@ export default {
 
       bottomPositionText += textLines.length * oneLineHeight;
 
-      //Author
-      const fontSizeAuthor = 12;
+      // Author
+      const fontSizeAuthor = 10;
       oneLineHeight = fontSizeAuthor / ptsPerInch;
 
       textLines = doc
-        .setFont("helvetica")
+        .setFont("helvetica", "normal")
         .setFontSize(fontSizeAuthor)
         .splitTextToSize(
           this.article.author + " " + this.article.created_at,
@@ -337,14 +337,21 @@ export default {
       bottomPositionText += textLines.length * oneLineHeight + 0.5;
       ``;
 
-      //Content
+      // Content
       let content = this.article.content.replace(/<p[^>]*>/g, "");
       content = content.replace(/<\/p[^>]*>/g, "\n");
       const fontSizeContent = 12;
       oneLineHeight = fontSizeContent / ptsPerInch;
 
       textLines = doc
-        .setFont("helvetica")
+        .setFont("helvetica", "bold")
+        .setFontSize(11)
+        .splitTextToSize("FULL TEXT : ");
+      doc.text(textLines, margin, bottomPositionText);
+      bottomPositionText += oneLineHeight + 0.08;
+
+      textLines = doc
+        .setFont("helvetica", "normal")
         .setFontSize(fontSizeContent)
         .splitTextToSize(content, maxLineWidth);
 
@@ -362,7 +369,39 @@ export default {
         }
       });
 
-      // //Download
+      // Summary
+      let summary = this.article.summary.replace(/<p[^>]*>/g, "");
+      summary = summary.replace(/<\/p[^>]*>/g, "\n");
+      const fontSizeSummary = 12;
+      oneLineHeight = fontSizeSummary / ptsPerInch;
+
+      textLines = doc
+        .setFont("helvetica", "bold")
+        .setFontSize(11)
+        .splitTextToSize("SUMMARY : ");
+      doc.text(textLines, margin, bottomPositionText);
+      bottomPositionText += oneLineHeight + 0.08;
+
+      textLines = doc
+        .setFont("helvetica", "normal")
+        .setFontSize(fontSizeSummary)
+        .splitTextToSize(summary, maxLineWidth);
+
+      textLines.forEach(value => {
+        doc.text(value, margin, bottomPositionText);
+
+        //0.08 because the vertical distance is too tight.
+        bottomPositionText += oneLineHeight + 0.08;
+
+        const bottomMaxPosition = 11.7 - 1.2;
+
+        if (bottomPositionText + oneLineHeight > bottomMaxPosition) {
+          doc.addPage();
+          bottomPositionText = 1.2;
+        }
+      });
+
+      // Download
       doc.save("article.pdf");
     },
     addComment() {
