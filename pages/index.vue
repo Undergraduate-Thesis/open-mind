@@ -147,7 +147,7 @@ export default Vue.extend({
         this.popularTags = this.popularTags.sort((a, b) =>
           a.total_used > b.total_used ? -1 : 1
         );
-        this.popularTags.slice(0, 9);
+        this.popularTags = this.popularTags.slice(0, 9);
       } catch (error) {
         console.log("error", error);
       }
