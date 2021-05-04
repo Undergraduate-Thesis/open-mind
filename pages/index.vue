@@ -67,7 +67,7 @@
             <div class="w-2/12 my-3 p-4 bg-white hidden lg:block rounded-md">
               <h1 class="text-2xl font-bold mb-4">Tag Populer</h1>
               <div
-                v-for="tag in tags"
+                v-for="tag in popularTags"
                 :key="tag._id"
                 class="flex flex-wrap hover:bg-gray-200 hover-trigger"
               >
@@ -77,9 +77,9 @@
                 <nuxt-link
                   :to="`/filterTag/${tag._id}`"
                   aria-label="view"
-                  class="w-2/6 inline-block text-sm bg-blue-500 hover:bg-blue-700 hover-target text-white font-bold py-1 px-2 rounded"
+                  class="w-2/6 inline-block self-center text-center bg-blue-500 hover:bg-blue-700 hover-target text-white font-bold py-1 px-2 rounded"
                 >
-                  View
+                  view
                 </nuxt-link>
               </div>
             </div>
@@ -143,11 +143,11 @@ export default Vue.extend({
     async getTags() {
       try {
         this.tags = await this.$axios.$get("/tag");
-        this.popularTags = [...this.tags];
+        this.popularTags = await [...this.tags];
         this.popularTags = this.popularTags.sort((a, b) =>
           a.total_used > b.total_used ? -1 : 1
         );
-        this.popularTags.length = 10;
+        this.popularTags.slice(0, 9);
       } catch (error) {
         console.log("error", error);
       }
