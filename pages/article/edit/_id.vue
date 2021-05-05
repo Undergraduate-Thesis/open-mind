@@ -9,7 +9,7 @@
 
     <div
       id="header"
-      class="flex items-center justify-between h-16 bg-gray-800 px-32"
+      class="flex items-center justify-between h-16 bg-gray-800 pl-4 pr-4 lg:pl-8 lg:pr-32"
     >
       <div class="flex">
         <nuxt-link to="/profile">
