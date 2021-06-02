@@ -157,6 +157,8 @@ export default {
       this.currentRoute = "Detail Article";
     } else if (this.$route.name == "profile") {
       this.currentRoute = "Profile";
+    } else if (this.$route.name == "filterTag-id") {
+      this.currentRoute = "Filter Article";
     }
   },
   watch: {
@@ -167,6 +169,8 @@ export default {
         this.currentRoute = "Detail Article";
       } else if (this.$route.name == "profile") {
         this.currentRoute = "Profile";
+      } else if (this.$route.name == "filterTag-id") {
+        this.currentRoute = "Filter Article";
       }
     }
   },
