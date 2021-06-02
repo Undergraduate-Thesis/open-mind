@@ -206,20 +206,15 @@
         </div>
         <div class="mb-6">
           <h4>Tag</h4>
+          <p class="text-gray-600">
+            Give some keywords that can represent your article.
+          </p>
         </div>
         <div class="mb-6">
           <h4>Content</h4>
           <p class="text-gray-600">
-            we support the use of markdown in writing articles.
-          </p>
-          <p class="text-gray-600">
-            You can see the markdown documentation
-            <a
-              href="https://www.markdownguide.org/cheat-sheet/"
-              class="text-blue-600"
-            >
-              here</a
-            >
+            Write down all the facts and opinions that you want to include in
+            your article.
           </p>
         </div>
       </div>
