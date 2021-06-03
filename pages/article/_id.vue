@@ -221,7 +221,7 @@ export default {
   },
   data() {
     return {
-      user: JSON.parse(localStorage.getItem("user")),
+      user: JSON.parse(localStorage.getItem("user") || ""),
       article: {},
       summary: false,
       tags: [],
@@ -234,6 +234,7 @@ export default {
   },
   async mounted() {
     try {
+      alert("masuk");
       //$axios.$get() it's same as $axios.get().data
       const article = await this.$axios.$get(
         `/article/${this.$route.params.id}`
@@ -258,15 +259,17 @@ export default {
       this.tags = tags;
 
       // Get Likes
-      const likes = await this.$axios.$get(
-        `/article/like/${this.$route.params.id}`
-      );
-      this.likes = likes;
-      this.likes.forEach(element => {
-        if (element.user_id == this.user.id) {
-          this.yourLikeId = element._id;
-        }
-      });
+      if (this.user != "") {
+        const likes = await this.$axios.$get(
+          `/article/like/${this.$route.params.id}`
+        );
+        this.likes = likes;
+        this.likes.forEach(element => {
+          if (element.user_id == this.user.id) {
+            this.yourLikeId = element._id;
+          }
+        });
+      }
 
       // Get Comments
       const comments = await this.$axios.$get(
