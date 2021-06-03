@@ -269,7 +269,7 @@ export default {
       this.dialogBoxDeleteArticle = false;
     },
     async removeBookmark() {
-      const removeBookmark = this.articles.splice(
+      const removeBookmark = this.bookmarks.splice(
         this.currentIndexRemoveBookmark,
         1
       );
