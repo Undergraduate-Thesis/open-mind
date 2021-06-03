@@ -234,7 +234,6 @@ export default {
   },
   async mounted() {
     try {
-      alert("masuk");
       //$axios.$get() it's same as $axios.get().data
       const article = await this.$axios.$get(
         `/article/${this.$route.params.id}`
@@ -259,7 +258,6 @@ export default {
       this.tags = tags;
 
       // Get Likes
-      console.log(this.user);
       if (this.user != null) {
         const likes = await this.$axios.$get(
           `/article/like/${this.$route.params.id}`
@@ -277,7 +275,6 @@ export default {
         `/article/comment/${this.$route.params.id}`
       );
       this.comments = comments;
-      alert(this.comments.length);
       // Get Bookmark
       if (this.user != null) {
         const bookmark = await this.$axios.$get(
