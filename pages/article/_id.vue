@@ -273,7 +273,7 @@ export default {
         `/article/comment/${this.$route.params.id}`
       );
       this.comments = comments;
-
+      alert(this.comments.length);
       // Get Bookmark
       if (this.user != null) {
         const bookmark = await this.$axios.$get(
