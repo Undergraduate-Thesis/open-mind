@@ -5,7 +5,7 @@
     <div class="flex w-full items-start px-4 py-6">
       <img
         class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-        :src="user.photo.link"
+        :src="comment.photo.link"
         alt="avatar"
       />
       <div class="w-full">
