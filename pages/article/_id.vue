@@ -221,7 +221,7 @@ export default {
   },
   data() {
     return {
-      user: JSON.parse(localStorage.getItem("user") || ""),
+      user: JSON.parse(localStorage.getItem("user")),
       article: {},
       summary: false,
       tags: [],
@@ -259,7 +259,8 @@ export default {
       this.tags = tags;
 
       // Get Likes
-      if (this.user != "") {
+      console.log(this.user);
+      if (this.user != null) {
         const likes = await this.$axios.$get(
           `/article/like/${this.$route.params.id}`
         );
