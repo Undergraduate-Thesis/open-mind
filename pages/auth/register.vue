@@ -320,10 +320,8 @@ export default Vue.extend({
             password: this.password
           });
           if (register) {
-            console.log(register.data.message);
             if (register.data.message == "success") {
               this.dialogBoxActivation = true;
-              console.log(this.dialogBoxActivation);
             }
             // localStorage.setItem("access_token", register.data.token);
             // localStorage.setItem("user", JSON.stringify(register.data.user));

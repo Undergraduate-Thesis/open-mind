@@ -117,10 +117,8 @@ export default Vue.extend({
       hour: "2-digit",
       minute: "2-digit"
     })}`;
-    console.log(this.created_at);
 
     const sentences = (this.article as any).content.match(/[^\.!\?]+[\.!\?]+/g);
-    console.log(this.article);
     if (sentences != null) {
       sentences.forEach((element: String) => {
         this.spoiler += element;
